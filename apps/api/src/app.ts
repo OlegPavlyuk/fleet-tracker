@@ -7,6 +7,8 @@ import { errorMiddleware } from './errors/middleware.js';
 import { config } from './config.js';
 import { createAuthRouter } from './auth/index.js';
 import { makeDbAuthDeps } from './auth/db-deps.js';
+import { createDroneRouter } from './drones/index.js';
+import { makeDbDroneDeps } from './drones/index.js';
 
 export function createApp(): Express {
   const app = express();
@@ -25,6 +27,7 @@ export function createApp(): Express {
   });
 
   app.use('/auth', createAuthRouter(makeDbAuthDeps()));
+  app.use('/drones', createDroneRouter(makeDbDroneDeps()));
 
   // 404 catch-all — must be after routes, before error middleware
   app.use((_req, res) => {
