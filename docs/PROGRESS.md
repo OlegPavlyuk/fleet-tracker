@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 9 — persist queue (write-behind batching → Drizzle)
+- **Current step**: ready to start v1 Step 10 — realtime WS (`/ws/stream`, broadcast to subscribers)
 - **Branch**: `main`
-- **Last session**: 2026-04-14 — v1 Step 8 complete
+- **Last session**: 2026-04-14 — v1 Step 9 complete
 
 ## Next up
 
@@ -21,6 +21,7 @@ After Iteration 0 finishes:
 - [x] **v1 Step 6**: REST drones — CRUD on `/drones`, scoped by owner
 - [x] **v1 Step 7**: WebSocket ingest — `/ws/ingest`, device-token auth, zod validation
 - [x] **v1 Step 8**: State manager — in-memory `Map<droneId, StateSnapshot>` + EventEmitter
+- [x] **v1 Step 9**: Persist queue — write-behind ring-buffer + dual-trigger flush → Drizzle batch insert
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -70,6 +71,16 @@ After Iteration 0 finishes:
 - Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
 - Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
+
+### 2026-04-14 (session 7)
+
+- Completed v1 Step 9: write-behind persist queue
+- Ring-buffer (1000 max, newest wins), dual-trigger flush (500 ms interval OR 100 items)
+- `isFlushing` guard prevents concurrent DB writes (key design decision with user)
+- `ST_SetSRID(ST_MakePoint(lng, lat), 4326)` for PostGIS inserts via Drizzle `sql` template
+- `stop()` drains remaining entries before DB pool closes (graceful shutdown order)
+- 8 new tests, 107 total, 0 type errors
+- Next: v1 Step 10 — realtime WS (`/ws/stream`, broadcast to subscribers)
 
 ### 2026-04-14 (session 6)
 
