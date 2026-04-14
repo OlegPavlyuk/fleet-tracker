@@ -3,6 +3,7 @@ import { logger } from './logger.js';
 import { createApp } from './app.js';
 import { queryClient } from './db/index.js';
 import { attachIngestWs, makeDbIngestDeps } from './ingest/index.js';
+import { StateManager } from './state/index.js';
 
 const app = createApp();
 
@@ -31,10 +32,13 @@ async function shutdown(signal: string): Promise<void> {
 process.on('SIGTERM', () => void shutdown('SIGTERM'));
 process.on('SIGINT', () => void shutdown('SIGINT'));
 
+const stateManager = new StateManager();
+
 attachIngestWs(server, {
   ...makeDbIngestDeps(),
-  onTelemetry: (_droneId, _msg) => {
-    // Wired in Step 8 (state manager) + Step 9 (persist queue)
+  onTelemetry: (droneId, msg) => {
+    stateManager.update(droneId, msg);
+    // persist queue wired in Step 9
   },
 });
 
