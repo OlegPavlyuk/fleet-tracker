@@ -4,6 +4,7 @@ import { createApp } from './app.js';
 import { queryClient } from './db/index.js';
 import { attachIngestWs, makeDbIngestDeps } from './ingest/index.js';
 import { StateManager } from './state/index.js';
+import { PersistQueue, makePersistDeps } from './persist/index.js';
 
 const app = createApp();
 
@@ -17,6 +18,13 @@ async function shutdown(signal: string): Promise<void> {
   server.close((err) => {
     if (err) logger.error({ err }, 'Error closing HTTP server');
   });
+
+  try {
+    await persistQueue.stop(); // drain remaining telemetry before closing DB
+    logger.info('Persist queue drained');
+  } catch (err) {
+    logger.error({ err }, 'Error draining persist queue');
+  }
 
   try {
     await queryClient.end({ timeout: 5 });
@@ -33,12 +41,13 @@ process.on('SIGTERM', () => void shutdown('SIGTERM'));
 process.on('SIGINT', () => void shutdown('SIGINT'));
 
 const stateManager = new StateManager();
+const persistQueue = new PersistQueue(makePersistDeps());
 
 attachIngestWs(server, {
   ...makeDbIngestDeps(),
   onTelemetry: (droneId, msg) => {
     stateManager.update(droneId, msg);
-    // persist queue wired in Step 9
+    persistQueue.push({ ...msg, droneId }); // use auth-verified droneId, not client-sent
   },
 });
 
