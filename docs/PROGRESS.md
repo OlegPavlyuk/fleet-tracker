@@ -5,16 +5,16 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 2 — `packages/shared` zod schemas
-- **Branch**: `feat/v1-foundation` (Step 1 done, pending merge)
-- **Last session**: 2026-04-14 — v1 Step 1 complete
+- **Current step**: ready to start v1 Step 3 — DB layer (docker-compose + Drizzle)
+- **Branch**: `feat/v1-foundation` (Steps 1–2 done, pending merge)
+- **Last session**: 2026-04-14 — v1 Steps 1 & 2 complete
 
 ## Next up
 
 After Iteration 0 finishes:
 
 - [x] **v1 Step 1**: Foundation — pnpm monorepo (root + workspaces), tsconfig base, ESLint, Prettier, Vitest config, `.env.example`
-- [ ] **v1 Step 2**: `packages/shared` — zod schemas for wire-formats + TS types
+- [x] **v1 Step 2**: `packages/shared` — zod schemas for wire-formats + TS types
 - [ ] **v1 Step 3**: DB layer — `docker-compose.yml` (PostGIS), Drizzle schema, first migration
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
@@ -62,5 +62,6 @@ After Iteration 0 finishes:
 - Approved full plan with Iteration 0 prepended
 - Completed Iteration 0: project conventions, git hooks, Claude Code config
 - Completed v1 Step 1: monorepo foundation (tsconfig base, ESLint flat config, Vitest v4 projects, workspace scaffolds, .env.example)
+- Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
-- Next: v1 Step 2 — `packages/shared` zod schemas + TS types
+- Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
