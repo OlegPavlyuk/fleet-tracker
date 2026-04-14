@@ -1,0 +1,12 @@
+node_modules
+dist
+build
+coverage
+.pnpm-store
+*.tsbuildinfo
+pnpm-lock.yaml
+.next
+.turbo
+.vite
+playwright-report
+test-results
