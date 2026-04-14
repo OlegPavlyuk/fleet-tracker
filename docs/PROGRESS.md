@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 7 — WebSocket ingest (emulator → `/ws/ingest`)
+- **Current step**: ready to start v1 Step 8 — state manager (in-memory Map + EventEmitter)
 - **Branch**: `main`
-- **Last session**: 2026-04-14 — v1 Step 6 complete
+- **Last session**: 2026-04-14 — v1 Step 7 complete
 
 ## Next up
 
@@ -19,7 +19,8 @@ After Iteration 0 finishes:
 - [x] **v1 Step 4**: `apps/api` skeleton — Express + pino + config + error middleware + healthcheck
 - [x] **v1 Step 5**: Auth — `/auth/register`, `/auth/login`, `/auth/me`, JWT middleware
 - [x] **v1 Step 6**: REST drones — CRUD on `/drones`, scoped by owner
-- [ ] **v1 Step 7**: WebSocket ingest — emulator → `/ws/ingest`, telemetry persist
+- [x] **v1 Step 7**: WebSocket ingest — `/ws/ingest`, device-token auth, zod validation
+- [ ] **v1 Step 8**: State manager — in-memory `Map<droneId, StateSnapshot>` + EventEmitter
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -69,6 +70,12 @@ After Iteration 0 finishes:
 - Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
 - Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
+
+### 2026-04-14 (session 5)
+
+- Completed v1 Step 7: /ws/ingest WebSocket — device token auth (SHA-256 hash lookup), TelemetryMessageSchema validation, closes 4401/1003 on errors, onTelemetry callback for Steps 8+9
+- 6 new tests (real WS connections, injected in-memory deps), 64 total
+- Next: v1 Step 8 — state manager (in-memory Map + EventEmitter)
 
 ### 2026-04-14 (session 4)
 
