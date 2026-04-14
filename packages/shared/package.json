@@ -8,5 +8,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "eslint src"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
   }
 }
