@@ -2,6 +2,7 @@ import { config } from './config.js';
 import { logger } from './logger.js';
 import { createApp } from './app.js';
 import { queryClient } from './db/index.js';
+import { attachIngestWs, makeDbIngestDeps } from './ingest/index.js';
 
 const app = createApp();
 
@@ -30,8 +31,11 @@ async function shutdown(signal: string): Promise<void> {
 process.on('SIGTERM', () => void shutdown('SIGTERM'));
 process.on('SIGINT', () => void shutdown('SIGINT'));
 
-// WS servers attached in later steps:
-// import { attachIngestWs } from './ingest/index.js';
-// import { attachRealtimeWs } from './realtime/index.js';
-// attachIngestWs(server);
-// attachRealtimeWs(server);
+attachIngestWs(server, {
+  ...makeDbIngestDeps(),
+  onTelemetry: (_droneId, _msg) => {
+    // Wired in Step 8 (state manager) + Step 9 (persist queue)
+  },
+});
+
+// attachRealtimeWs(server); — wired in Step 10
