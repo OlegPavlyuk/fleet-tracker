@@ -42,16 +42,16 @@ After Iteration 0 finishes:
 
 ## Roadmap snapshot (for context)
 
-| Iteration | Status      | Summary                                                                                                 |
-| --------- | ----------- | ------------------------------------------------------------------------------------------------------- |
-| 0         | in progress | Setup & workflow (CLAUDE.md, hooks, conventions)                                                        |
-| v1        | not started | Thin e2e: emulator → ingest → state → broadcast + persist → web. Drizzle + PostGIS, JSON wire, JWT auth |
-| v2        | future      | Protobuf wire-format, socket.io comparison, geofencing                                                  |
-| v3        | future      | WASM hot-path (Rust → WASM): geo-calcs, benchmarks                                                      |
-| v4        | future      | OAuth (Google/GitHub), refresh tokens, multi-tenant, RBAC                                               |
-| v5        | future      | Performance: 10k drones, NATS JetStream, Prometheus metrics                                             |
-| v6        | future      | Mission planning: waypoints, ETA, routing, replay video                                                 |
-| v7        | future      | Production hardening: graceful shutdown, OTel, Grafana, prod images                                     |
+| Iteration | Status | Summary                                                                                                 |
+| --------- | ------ | ------------------------------------------------------------------------------------------------------- |
+| 0         | done   | Setup & workflow (CLAUDE.md, hooks, conventions)                                                        |
+| v1        | next   | Thin e2e: emulator → ingest → state → broadcast + persist → web. Drizzle + PostGIS, JSON wire, JWT auth |
+| v2        | future | Protobuf wire-format, socket.io comparison, geofencing                                                  |
+| v3        | future | WASM hot-path (Rust → WASM): geo-calcs, benchmarks                                                      |
+| v4        | future | OAuth (Google/GitHub), refresh tokens, multi-tenant, RBAC                                               |
+| v5        | future | Performance: 10k drones, NATS JetStream, Prometheus metrics                                             |
+| v6        | future | Mission planning: waypoints, ETA, routing, replay video                                                 |
+| v7        | future | Production hardening: graceful shutdown, OTel, Grafana, prod images                                     |
 
 ## Session log (most recent first)
 
