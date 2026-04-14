@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 6 — REST drones CRUD (`/drones`, scoped by owner)
-- **Branch**: `feat/v1-foundation` (Steps 1–4 done, pending merge)
-- **Last session**: 2026-04-14 — v1 Step 5 complete
+- **Current step**: ready to start v1 Step 7 — WebSocket ingest (emulator → `/ws/ingest`)
+- **Branch**: `main`
+- **Last session**: 2026-04-14 — v1 Step 6 complete
 
 ## Next up
 
@@ -18,7 +18,8 @@ After Iteration 0 finishes:
 - [x] **v1 Step 3**: DB layer — `docker-compose.yml` (PostGIS), Drizzle schema, first migration
 - [x] **v1 Step 4**: `apps/api` skeleton — Express + pino + config + error middleware + healthcheck
 - [x] **v1 Step 5**: Auth — `/auth/register`, `/auth/login`, `/auth/me`, JWT middleware
-- [ ] **v1 Step 6**: REST drones — CRUD on `/drones`, scoped by owner
+- [x] **v1 Step 6**: REST drones — CRUD on `/drones`, scoped by owner
+- [ ] **v1 Step 7**: WebSocket ingest — emulator → `/ws/ingest`, telemetry persist
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -68,6 +69,14 @@ After Iteration 0 finishes:
 - Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
 - Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
+
+### 2026-04-14 (session 4)
+
+- Completed v1 Step 6: REST drones CRUD — GET/POST/PATCH/DELETE /drones, all behind requireAuth, scoped to owner
+- POST generates SHA-256-hashed device token, returns plaintext once
+- DroneDeps injection pattern (same as AuthDeps) — 15 new tests, no testcontainers
+- 58 tests passing, 0 type errors, 0 lint errors
+- Next: v1 Step 7 — WebSocket ingest (emulator → /ws/ingest, telemetry persist)
 
 ### 2026-04-14 (session 3)
 
