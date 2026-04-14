@@ -4,16 +4,16 @@
 
 ## Current state
 
-- **Active iteration**: v1 (Iteration 0 complete)
-- **Current step**: ready to start v1 Step 1 — Foundation
-- **Branch**: `main`
-- **Last session**: 2026-04-14 — Iteration 0 setup done
+- **Active iteration**: v1
+- **Current step**: ready to start v1 Step 2 — `packages/shared` zod schemas
+- **Branch**: `feat/v1-foundation` (Step 1 done, pending merge)
+- **Last session**: 2026-04-14 — v1 Step 1 complete
 
 ## Next up
 
 After Iteration 0 finishes:
 
-- [ ] **v1 Step 1**: Foundation — pnpm monorepo (root + workspaces), tsconfig base, ESLint, Prettier, Vitest config, `.env.example`
+- [x] **v1 Step 1**: Foundation — pnpm monorepo (root + workspaces), tsconfig base, ESLint, Prettier, Vitest config, `.env.example`
 - [ ] **v1 Step 2**: `packages/shared` — zod schemas for wire-formats + TS types
 - [ ] **v1 Step 3**: DB layer — `docker-compose.yml` (PostGIS), Drizzle schema, first migration
 
@@ -61,5 +61,6 @@ After Iteration 0 finishes:
 - Decided on Variant B for v1: thin e2e + Drizzle + PostGIS
 - Approved full plan with Iteration 0 prepended
 - Completed Iteration 0: project conventions, git hooks, Claude Code config
-- Next session: start v1 Step 1 (Foundation — workspaces tsconfig/eslint/vitest)
-- **User action pending**: підключити Context7 MCP (`claude mcp add context7 --transport http https://mcp.context7.com/mcp`)
+- Completed v1 Step 1: monorepo foundation (tsconfig base, ESLint flat config, Vitest v4 projects, workspace scaffolds, .env.example)
+- Context7 MCP connected ✓
+- Next: v1 Step 2 — `packages/shared` zod schemas + TS types
