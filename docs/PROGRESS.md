@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 8 — state manager (in-memory Map + EventEmitter)
+- **Current step**: ready to start v1 Step 9 — persist queue (write-behind batching → Drizzle)
 - **Branch**: `main`
-- **Last session**: 2026-04-14 — v1 Step 7 complete
+- **Last session**: 2026-04-14 — v1 Step 8 complete
 
 ## Next up
 
@@ -20,7 +20,7 @@ After Iteration 0 finishes:
 - [x] **v1 Step 5**: Auth — `/auth/register`, `/auth/login`, `/auth/me`, JWT middleware
 - [x] **v1 Step 6**: REST drones — CRUD on `/drones`, scoped by owner
 - [x] **v1 Step 7**: WebSocket ingest — `/ws/ingest`, device-token auth, zod validation
-- [ ] **v1 Step 8**: State manager — in-memory `Map<droneId, StateSnapshot>` + EventEmitter
+- [x] **v1 Step 8**: State manager — in-memory `Map<droneId, StateSnapshot>` + EventEmitter
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -70,6 +70,14 @@ After Iteration 0 finishes:
 - Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
 - Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
+
+### 2026-04-14 (session 6)
+
+- Completed v1 Step 8: StateManager — `Map<droneId, StateSnapshot>` + EventEmitter
+- `update()` derives status from battery_pct (>20% → active, ≤20% → idle), emits `state-changed`
+- Wired into ingest `onTelemetry` callback in `index.ts`
+- 12 new tests, 99 total, 0 type errors
+- Next: v1 Step 9 — persist queue (write-behind batching → Drizzle)
 
 ### 2026-04-14 (session 5)
 
