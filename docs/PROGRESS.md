@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 5 — Auth (`/auth/register`, `/auth/login`, `/auth/me`, JWT middleware)
+- **Current step**: ready to start v1 Step 6 — REST drones CRUD (`/drones`, scoped by owner)
 - **Branch**: `feat/v1-foundation` (Steps 1–4 done, pending merge)
-- **Last session**: 2026-04-14 — v1 Steps 3 & 4 complete
+- **Last session**: 2026-04-14 — v1 Step 5 complete
 
 ## Next up
 
@@ -17,7 +17,8 @@ After Iteration 0 finishes:
 - [x] **v1 Step 2**: `packages/shared` — zod schemas for wire-formats + TS types
 - [x] **v1 Step 3**: DB layer — `docker-compose.yml` (PostGIS), Drizzle schema, first migration
 - [x] **v1 Step 4**: `apps/api` skeleton — Express + pino + config + error middleware + healthcheck
-- [ ] **v1 Step 5**: Auth — `/auth/register`, `/auth/login`, `/auth/me`, JWT middleware
+- [x] **v1 Step 5**: Auth — `/auth/register`, `/auth/login`, `/auth/me`, JWT middleware
+- [ ] **v1 Step 6**: REST drones — CRUD on `/drones`, scoped by owner
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -67,6 +68,14 @@ After Iteration 0 finishes:
 - Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
 - Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
+
+### 2026-04-14 (session 3)
+
+- Completed v1 Step 5: auth module — argon2 password hashing, jose HS256 JWT, requireAuth middleware, /auth/register + /auth/login + /auth/me routes
+- Routes use injected AuthDeps interface (Drizzle impl for prod, in-memory fake for tests — no testcontainers needed)
+- argon2 native build approved via pnpm-workspace.yaml `onlyBuiltDependencies`
+- 43 tests passing (20 new auth tests), 0 type errors, 0 lint errors
+- Next: v1 Step 6 — REST drones CRUD (/drones, scoped by owner)
 
 ### 2026-04-14 (session 2)
 
