@@ -5,6 +5,8 @@ import { pinoHttp } from 'pino-http';
 import { logger } from './logger.js';
 import { errorMiddleware } from './errors/middleware.js';
 import { config } from './config.js';
+import { createAuthRouter } from './auth/index.js';
+import { makeDbAuthDeps } from './auth/db-deps.js';
 
 export function createApp(): Express {
   const app = express();
@@ -21,6 +23,8 @@ export function createApp(): Express {
   app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
   });
+
+  app.use('/auth', createAuthRouter(makeDbAuthDeps()));
 
   // 404 catch-all — must be after routes, before error middleware
   app.use((_req, res) => {
