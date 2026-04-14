@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 3 — DB layer (docker-compose + Drizzle)
-- **Branch**: `feat/v1-foundation` (Steps 1–2 done, pending merge)
-- **Last session**: 2026-04-14 — v1 Steps 1 & 2 complete
+- **Current step**: ready to start v1 Step 5 — Auth (`/auth/register`, `/auth/login`, `/auth/me`, JWT middleware)
+- **Branch**: `feat/v1-foundation` (Steps 1–4 done, pending merge)
+- **Last session**: 2026-04-14 — v1 Steps 3 & 4 complete
 
 ## Next up
 
@@ -15,7 +15,9 @@ After Iteration 0 finishes:
 
 - [x] **v1 Step 1**: Foundation — pnpm monorepo (root + workspaces), tsconfig base, ESLint, Prettier, Vitest config, `.env.example`
 - [x] **v1 Step 2**: `packages/shared` — zod schemas for wire-formats + TS types
-- [ ] **v1 Step 3**: DB layer — `docker-compose.yml` (PostGIS), Drizzle schema, first migration
+- [x] **v1 Step 3**: DB layer — `docker-compose.yml` (PostGIS), Drizzle schema, first migration
+- [x] **v1 Step 4**: `apps/api` skeleton — Express + pino + config + error middleware + healthcheck
+- [ ] **v1 Step 5**: Auth — `/auth/register`, `/auth/login`, `/auth/me`, JWT middleware
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -65,3 +67,12 @@ After Iteration 0 finishes:
 - Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
 - Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
+
+### 2026-04-14 (session 2)
+
+- Completed v1 Step 3: docker-compose.yml (postgis/postgis:16-3.4), Drizzle schema (users, drones, telemetry with PostGIS geometry + GIST index, zones), first migration applied
+- Note: Drizzle `customType` quotes geometry type names in generated SQL — manually fixed migration to use unquoted `geometry(POINT, 4326)`. This is a known drizzle-kit limitation with PostGIS.
+- Completed v1 Step 4: apps/api skeleton — config.ts (zod fail-fast env validation), logger.ts (pino), typed domain errors (AppError hierarchy), Express app factory (createApp), /health endpoint, central error middleware, graceful shutdown in index.ts
+- Added vitest test-setup.ts with minimum env vars for tests that transitively import config.ts
+- 46 tests passing (23 shared + 23 api), 0 type errors, 0 lint errors
+- Next: v1 Step 5 — Auth (/auth/register, /auth/login, /auth/me, JWT middleware)
