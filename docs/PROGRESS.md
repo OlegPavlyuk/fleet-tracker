@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 15 — History view (replay path on map)
+- **Current step**: ready to start v1 Step 16 — Tests (unit + integration + WS contract + smoke E2E)
 - **Branch**: `main`
-- **Last session**: 2026-04-15 — v1 Step 14 complete
+- **Last session**: 2026-04-15 — v1 Step 15 complete
 
 ## Next up
 
@@ -27,6 +27,7 @@ After Iteration 0 finishes:
 - [x] **v1 Step 12**: `apps/emulator` — drone simulator CLI (auto-provision via REST, N DroneClient WS connections)
 - [x] **v1 Step 13**: `apps/web` foundation — Vite + React + react-router + TanStack Query + Zustand auth store + typed API client + Login/Register/Dashboard/History pages
 - [x] **v1 Step 14**: Dashboard map — MapLibre GL JS GeoJSON circle layer + `FleetWSClient` + `useFleetWS` hook + `useDroneStore` (Zustand) + `DroneList` sidebar + popup on drone click
+- [x] **v1 Step 15**: History view (replay path on map)
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -65,6 +66,15 @@ After Iteration 0 finishes:
 | v7        | future | Production hardening: graceful shutdown, OTel, Grafana, prod images                                     |
 
 ## Session log (most recent first)
+
+### 2026-04-15 (session 6)
+
+- Completed v1 Step 15: History view
+- `HistoryMap.tsx` — MapLibre GeoJSON LineString layer (`history-path` source, `history-line` layer), start marker (green `#4ade80`) + end marker (red `#ef4444`) stored in refs and reused on prop update, `fitBounds` with `padding:60, maxZoom:15` when ≥2 points, no fitBounds on 0/1 points, `map.remove()` + marker cleanup on unmount
+- `History.tsx` — preset buttons (5m/15m/1h/24h) + Custom mode with datetime-local inputs, `useMemo([preset])` captures stable `from`/`to` timestamps once per preset change (prevents query key drift), Load button disabled when `from >= to`, TanStack Query `useQuery(['history', droneId, from, to])` enabled only when range is valid, derived stats (count / duration / battery delta) with `—` guards for <2 points, loading overlay, error + retry, empty message, drone name from cached drone list
+- Fix: `vi.hoisted` required for `mockUseQuery` (same TDZ pattern as Step 14); `as HTMLButtonElement` casts flagged by `no-unnecessary-type-assertion` — switched to generic `getByRole<HTMLButtonElement>`; bogus `react-hooks/exhaustive-deps` eslint-disable removed (plugin not in project); stats count text wrapped in single `<b>` so RTL `getByText(/N.*points/i)` matches a single text node
+- 27 new tests (219 total), 0 type errors, 0 lint errors
+- Next: v1 Step 16 — Tests (unit + integration + WS contract + smoke E2E)
 
 ### 2026-04-15 (session 5)
 
