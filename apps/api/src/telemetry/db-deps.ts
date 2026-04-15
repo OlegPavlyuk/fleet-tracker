@@ -1,10 +1,11 @@
 import { eq, and, gte, lte, asc } from 'drizzle-orm';
 import { sql } from 'drizzle-orm';
-import { db } from '../db/index.js';
+import { db as globalDb } from '../db/index.js';
+import type { AppDb } from '../db/client.js';
 import { drones, telemetry } from '../db/schema.js';
 import type { TelemetryDeps, HistoryPoint, BoundingBox } from './routes.js';
 
-export function makeDbTelemetryDeps(): TelemetryDeps {
+export function makeDbTelemetryDeps(db: AppDb = globalDb): TelemetryDeps {
   return {
     findDroneOwner: async (droneId: string) => {
       const rows = await db

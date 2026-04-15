@@ -1,6 +1,7 @@
 import { eq, and } from 'drizzle-orm';
 import type { DroneDeps, DroneRecord } from './routes.js';
-import { db } from '../db/index.js';
+import { db as globalDb } from '../db/index.js';
+import type { AppDb } from '../db/client.js';
 import { drones } from '../db/schema.js';
 
 function toRecord(row: typeof drones.$inferSelect): DroneRecord {
@@ -15,7 +16,7 @@ function toRecord(row: typeof drones.$inferSelect): DroneRecord {
   };
 }
 
-export function makeDbDroneDeps(): DroneDeps {
+export function makeDbDroneDeps(db: AppDb = globalDb): DroneDeps {
   return {
     async listByOwner(ownerId) {
       const rows = await db.select().from(drones).where(eq(drones.ownerId, ownerId));

@@ -16,3 +16,6 @@ export const db = drizzle(queryClient, {
 
 // Exported for graceful shutdown in index.ts
 export { queryClient };
+
+// Type alias for use in db-deps and test helpers
+export type AppDb = typeof db;
