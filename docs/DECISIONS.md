@@ -94,3 +94,17 @@
 - httpOnly cookie зразу — правильно, але роздуває auth-крок v1 непропорційно scope
 
 **Trade-offs**: localStorage вразливий до XSS. У v1 web — внутрішній dashboard без user-generated content, ризик низький. **Не деплоїти v1 у production з реальними даними.**
+
+---
+
+## 2026-04-15 — Static path (no animated replay) for History view v1
+
+**Context**: History view (Step 15) could show a static flight path line or animate a marker moving along the route with playback controls (like a video player for the flight).
+
+**Decision**: Static path only in v1 — fetch points for a time range, draw the GeoJSON LineString on the map, done.
+
+**Alternatives considered**:
+
+- Animated replay (play button, marker moves along path over time) — more impressive for portfolio demo but adds meaningful complexity: animation loop, playback speed controls, time scrubber, synchronising marker position to timestamps. Deferred to a possible v6 enhancement alongside mission planning and replay video.
+
+**Trade-offs**: Static path delivers the full vertical slice (API → map) with low risk. Animated replay is a natural follow-up in v6 where "replay video" is already on the roadmap.
