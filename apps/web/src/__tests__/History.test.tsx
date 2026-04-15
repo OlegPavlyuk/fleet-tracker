@@ -84,7 +84,7 @@ describe('History — navigation and preset controls', () => {
   it('Load button is disabled when custom inputs are empty', async () => {
     render(<History />);
     await userEvent.click(screen.getByRole('button', { name: /custom/i }));
-    const btn = screen.getByRole('button', { name: /load/i }) as HTMLButtonElement;
+    const btn = screen.getByRole<HTMLButtonElement>('button', { name: /load/i });
     expect(btn.disabled).toBe(true);
   });
 
@@ -98,7 +98,7 @@ describe('History — navigation and preset controls', () => {
     fireEvent.change(screen.getByLabelText('To'), {
       target: { value: '2026-04-15T10:00' },
     });
-    const btn = screen.getByRole('button', { name: /load/i }) as HTMLButtonElement;
+    const btn = screen.getByRole<HTMLButtonElement>('button', { name: /load/i });
     expect(btn.disabled).toBe(true);
   });
 
@@ -111,7 +111,7 @@ describe('History — navigation and preset controls', () => {
     fireEvent.change(screen.getByLabelText('To'), {
       target: { value: '2026-04-15T12:00' },
     });
-    const btn = screen.getByRole('button', { name: /load/i }) as HTMLButtonElement;
+    const btn = screen.getByRole<HTMLButtonElement>('button', { name: /load/i });
     expect(btn.disabled).toBe(false);
   });
 });

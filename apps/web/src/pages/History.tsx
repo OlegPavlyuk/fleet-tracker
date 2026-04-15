@@ -32,7 +32,6 @@ export function History() {
   const [customRange, setCustomRange] = useState<{ from: number; to: number } | null>(null);
 
   // Capture timestamp once per preset change — prevents query key drift on re-renders
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const presetRange = useMemo(() => {
     if (preset === 'custom') return null;
     const to = Date.now();
