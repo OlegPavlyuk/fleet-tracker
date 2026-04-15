@@ -143,13 +143,15 @@ function DroneMap() {
       isMapReadyRef.current = false;
       map.remove();
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // intentional empty deps: map init runs once on mount
 
   // ── Sync GeoJSON when drone state changes ───────────────────────────────────
   useEffect(() => {
     if (!isMapReadyRef.current || !mapRef.current) return;
-    const src = mapRef.current.getSource('drones') as maplibregl.GeoJSONSource | undefined;
-    src?.setData(toFeatureCollection(drones));
+    const src = mapRef.current.getSource('drones');
+    if (src && 'setData' in src) {
+      (src as maplibregl.GeoJSONSource).setData(toFeatureCollection(drones));
+    }
   }, [drones]);
 
   // ── Create popup when a drone is selected ──────────────────────────────────

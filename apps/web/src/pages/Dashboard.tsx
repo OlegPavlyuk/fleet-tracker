@@ -2,10 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import { DroneList } from '../components/DroneList';
 import { Map } from '../components/Map';
 import { useAuthStore } from '../lib/auth';
+import { useFleetWS } from '../lib/useFleetWS.js';
 
 export function Dashboard() {
   const navigate = useNavigate();
+  const token = useAuthStore((s) => s.token);
   const logout = useAuthStore((s) => s.logout);
+
+  useFleetWS(token);
 
   function handleLogout() {
     logout();

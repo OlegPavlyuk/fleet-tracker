@@ -4,7 +4,10 @@ import { useDroneStore } from '../lib/droneStore';
 import { useFleetWS } from '../lib/useFleetWS';
 
 // vi.hoisted ensures these run before vi.mock hoisting
-const { mockClose, MockFleetWSClient } = vi.hoisted(() => {
+const { mockClose, MockFleetWSClient } = vi.hoisted<{
+  mockClose: ReturnType<typeof vi.fn>;
+  MockFleetWSClient: ReturnType<typeof vi.fn>;
+}>(() => {
   const mockClose = vi.fn();
   const MockFleetWSClient = vi.fn().mockImplementation(() => ({ close: mockClose }));
   return { mockClose, MockFleetWSClient };
@@ -28,7 +31,10 @@ describe('useFleetWS', () => {
     expect(MockFleetWSClient).toHaveBeenCalledOnce();
     expect(MockFleetWSClient).toHaveBeenCalledWith(
       'my-token',
-      expect.objectContaining({ onSnapshot: expect.any(Function), onUpdate: expect.any(Function) }),
+      expect.objectContaining({
+        onSnapshot: expect.any(Function) as unknown,
+        onUpdate: expect.any(Function) as unknown,
+      }),
     );
     unmount();
   });
@@ -60,7 +66,7 @@ describe('useFleetWS', () => {
 
   it('onSnapshot callback calls store.setSnapshot', () => {
     renderHook(() => useFleetWS('tok'));
-    const { onSnapshot } = MockFleetWSClient.mock.calls[0][1] as {
+    const { onSnapshot } = MockFleetWSClient.mock.calls[0]![1] as {
       onSnapshot: (arr: unknown[]) => void;
     };
     const snap = {

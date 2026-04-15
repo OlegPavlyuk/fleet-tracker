@@ -8,21 +8,17 @@ vi.mock('@tanstack/react-query', () => ({
   useQuery: () => ({ data: [] }),
 }));
 
-// vi.hoisted ensures mocks are available when vi.mock factory runs
+// vi.hoisted ensures mocks are available when vi.mock factory runs.
+// Only export vars used in test assertions; the rest stay captured in closures.
 const {
   mockSetData,
-  mockGetSource,
   mockAddSource,
   mockAddLayer,
   mockRemove,
-  mockGetCanvas,
-  mockQueryRenderedFeatures,
   MockMap,
   mockPopupRemove,
   mockPopupAddTo,
   mockPopupSetLngLat,
-  mockPopupSetHTML,
-  mockPopupOn,
   MockPopup,
 } = vi.hoisted(() => {
   const mockSetData = vi.fn();
@@ -61,18 +57,13 @@ const {
 
   return {
     mockSetData,
-    mockGetSource,
     mockAddSource,
     mockAddLayer,
     mockRemove,
-    mockGetCanvas,
-    mockQueryRenderedFeatures,
     MockMap,
     mockPopupRemove,
     mockPopupAddTo,
     mockPopupSetLngLat,
-    mockPopupSetHTML,
-    mockPopupOn,
     MockPopup,
   };
 });
@@ -129,7 +120,7 @@ describe('Map', () => {
       useDroneStore.setState({ drones: new Map([['d1', s1]]) });
     });
     expect(mockSetData).toHaveBeenCalledOnce();
-    const arg = mockSetData.mock.calls[0][0] as { type: string; features: unknown[] };
+    const arg = mockSetData.mock.calls[0]![0] as { type: string; features: unknown[] };
     expect(arg.type).toBe('FeatureCollection');
     expect(arg.features).toHaveLength(1);
   });
