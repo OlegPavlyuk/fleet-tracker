@@ -3,6 +3,7 @@ import { logger } from './logger.js';
 import { createApp } from './app.js';
 import { queryClient } from './db/index.js';
 import { attachIngestWs, makeDbIngestDeps } from './ingest/index.js';
+import { attachRealtimeWs } from './realtime/index.js';
 import { StateManager } from './state/index.js';
 import { PersistQueue, makePersistDeps } from './persist/index.js';
 
@@ -51,4 +52,8 @@ attachIngestWs(server, {
   },
 });
 
-// attachRealtimeWs(server); — wired in Step 10
+attachRealtimeWs(server, {
+  verifyJwt: (token) =>
+    import('./auth/jwt.js').then(({ verifyToken }) => verifyToken(token, config.jwtSecret)),
+  stateManager,
+});

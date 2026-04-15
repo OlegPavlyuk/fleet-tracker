@@ -16,8 +16,9 @@ const baseEntry: TelemetryMessage = {
 
 function makeDeps(onInsert?: (rows: TelemetryMessage[]) => void): PersistDeps {
   return {
-    batchInsert: async (rows) => {
+    batchInsert: (rows) => {
       onInsert?.(rows);
+      return Promise.resolve();
     },
   };
 }
@@ -163,9 +164,7 @@ describe('PersistQueue', () => {
 
   it('increments droppedWrites by batch size when batchInsert throws', async () => {
     const deps: PersistDeps = {
-      batchInsert: async () => {
-        throw new Error('DB connection lost');
-      },
+      batchInsert: () => Promise.reject(new Error('DB connection lost')),
     };
     const queue = new PersistQueue(deps, { flushSize: 2 });
 

@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 10 — realtime WS (`/ws/stream`, broadcast to subscribers)
+- **Current step**: ready to start v1 Step 11 — history endpoint (`/telemetry/history`)
 - **Branch**: `main`
-- **Last session**: 2026-04-14 — v1 Step 9 complete
+- **Last session**: 2026-04-15 — v1 Step 10 complete
 
 ## Next up
 
@@ -22,6 +22,7 @@ After Iteration 0 finishes:
 - [x] **v1 Step 7**: WebSocket ingest — `/ws/ingest`, device-token auth, zod validation
 - [x] **v1 Step 8**: State manager — in-memory `Map<droneId, StateSnapshot>` + EventEmitter
 - [x] **v1 Step 9**: Persist queue — write-behind ring-buffer + dual-trigger flush → Drizzle batch insert
+- [x] **v1 Step 10**: Realtime WS — `/ws/stream`, JWT auth, snapshot on connect, update broadcast
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -71,6 +72,18 @@ After Iteration 0 finishes:
 - Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
 - Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
+
+### 2026-04-15
+
+- Completed v1 Step 10: realtime WS (`/ws/stream`)
+- JWT auth via `?token=` query param; closes 4401 on missing/invalid token
+- Sends `{ type: 'snapshot', payload: StateSnapshot[] }` on connect (full current state)
+- Subscribes to `StateManager` `state-changed` events → broadcasts `{ type: 'update', payload: StateSnapshot }` to all open clients
+- Cleans up listener on close; verified with `listenerCount` assertion
+- Key test pattern: `makeMessageCollector` buffers WS messages from creation to avoid race where server's snapshot arrives in the same TCP burst as the HTTP 101 upgrade response
+- Fixed pre-existing lint errors in `persist/queue.test.ts` (`require-await` on sync `batchInsert` mocks)
+- 7 new tests, 114 total, 0 type errors, 0 lint errors
+- Next: v1 Step 11 — history endpoint (`/telemetry/history`)
 
 ### 2026-04-14 (session 7)
 
