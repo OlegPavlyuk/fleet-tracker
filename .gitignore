@@ -54,3 +54,6 @@ temp/
 
 # Drizzle / migrations sandbox (keep migrations themselves)
 drizzle/.cache/
+
+# Visual companion
+.superpowers/

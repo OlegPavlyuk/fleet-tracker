@@ -68,6 +68,21 @@
 
 ---
 
+## 2026-04-15 — Map tile provider: OpenFreeMap with env-configurable style URL
+
+**Context**: MapLibre GL JS needs a style URL (tiles + cartography). For a pet project we want zero signup friction while keeping the door open for a better provider later.
+
+**Decision**: Use OpenFreeMap (`https://tiles.openfreemap.org/styles/liberty`) as the default, with the style URL read from `VITE_MAP_STYLE_URL` env var so the provider can be swapped without touching code.
+
+**Alternatives considered**:
+
+- MapTiler free tier — better cartography and SLA, but requires account signup and embedding an API key; adds operational complexity for zero benefit at v1 scale
+- Mapbox — paid beyond the free tier, not suitable for an open portfolio project
+
+**Trade-offs**: OpenFreeMap has no SLA and is community-run. If tiles become unreliable in later iterations (v6+ mission planning), swap to MapTiler via `.env` — no code change required.
+
+---
+
 ## 2026-04-14 — JWT in localStorage for v1 (not httpOnly cookie)
 
 **Context**: Best-practice — httpOnly cookie + CSRF-захист. Це додає ~півдня setup (CORS credentials, refresh-token rotation, CSRF middleware).
