@@ -7,9 +7,12 @@ import { attachRealtimeWs } from './realtime/index.js';
 import { StateManager } from './state/index.js';
 import { PersistQueue, makePersistDeps } from './persist/index.js';
 
+import http from 'node:http';
+
 const app = createApp();
 
-const server = app.listen(config.port, () => {
+const server = http.createServer(app as Parameters<typeof http.createServer>[0]);
+server.listen(config.port, () => {
   logger.info({ port: config.port, nodeEnv: config.nodeEnv }, 'API server started');
 });
 
