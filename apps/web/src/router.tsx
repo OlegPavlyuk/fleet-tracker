@@ -5,7 +5,7 @@ import { History } from './pages/History';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 
-export const router = createBrowserRouter([
+export const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
   { path: '/login', element: <Login /> },
   { path: '/register', element: <Register /> },
   {

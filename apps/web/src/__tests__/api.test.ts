@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { api } from '../lib/api';
-import { ApiError } from '../lib/http';
 import { useAuthStore } from '../lib/auth';
 
 const BASE = 'http://localhost:3000';
@@ -9,7 +8,7 @@ function okFetch(data: unknown, status = 200) {
   return vi.fn().mockResolvedValue({
     ok: true,
     status,
-    json: async () => data,
+    json: () => Promise.resolve(data),
   });
 }
 
@@ -17,7 +16,7 @@ function errFetch(status: number, message: string) {
   return vi.fn().mockResolvedValue({
     ok: false,
     status,
-    json: async () => ({ message }),
+    json: () => Promise.resolve({ message }),
   });
 }
 
@@ -97,6 +96,7 @@ describe('api', () => {
       expect(mockFetch).toHaveBeenCalledWith(
         `${BASE}/auth/me`,
         expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           headers: expect.objectContaining({ Authorization: 'Bearer tok-me' }),
         }),
       );
@@ -220,7 +220,7 @@ describe('api', () => {
       useAuthStore.setState({ token: 'tok', user: null });
       const mockFetch = vi
         .fn()
-        .mockResolvedValue({ ok: true, status: 204, json: async () => undefined });
+        .mockResolvedValue({ ok: true, status: 204, json: () => Promise.resolve(undefined) });
       vi.stubGlobal('fetch', mockFetch);
 
       const result = await api.drones.delete('d1');
