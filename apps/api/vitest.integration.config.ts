@@ -4,9 +4,9 @@ export default defineConfig({
   test: {
     environment: 'node',
     setupFiles: ['./src/test-setup.ts'],
-    exclude: ['**/node_modules/**', 'src/__tests__/integration/**'],
-    coverage: {
-      provider: 'v8',
-    },
+    include: ['src/__tests__/integration/**/*.test.ts'],
+    testTimeout: 60_000,
+    hookTimeout: 90_000,
+    pool: 'forks',
   },
 });
