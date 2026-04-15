@@ -29,31 +29,36 @@ const {
   const mockGetCanvas = vi.fn().mockReturnValue({ style: {} });
   const mockQueryRenderedFeatures = vi.fn().mockReturnValue([]);
 
-  // MockMap fires 'load' synchronously when map.on('load', cb) is called
-  const MockMap = vi.fn().mockImplementation(() => ({
-    on: vi.fn((event: string, cb: () => void) => {
-      if (event === 'load') cb();
-    }),
-    remove: mockRemove,
-    addSource: mockAddSource,
-    addLayer: mockAddLayer,
-    getSource: mockGetSource,
-    getCanvas: mockGetCanvas,
-    queryRenderedFeatures: mockQueryRenderedFeatures,
-  }));
+  // Use regular functions (not arrow functions) so Reflect.construct works with
+  // vitest 4.x when called via 'new maplibregl.Map()' / 'new maplibregl.Popup()'
+  const MockMap = vi.fn(function () {
+    return {
+      on: vi.fn(function (event: string, cb: () => void) {
+        if (event === 'load') cb();
+      }),
+      remove: mockRemove,
+      addSource: mockAddSource,
+      addLayer: mockAddLayer,
+      getSource: mockGetSource,
+      getCanvas: mockGetCanvas,
+      queryRenderedFeatures: mockQueryRenderedFeatures,
+    };
+  });
 
   const mockPopupRemove = vi.fn();
   const mockPopupAddTo = vi.fn().mockReturnThis();
   const mockPopupSetLngLat = vi.fn().mockReturnThis();
   const mockPopupSetHTML = vi.fn().mockReturnThis();
   const mockPopupOn = vi.fn().mockReturnThis();
-  const MockPopup = vi.fn().mockImplementation(() => ({
-    setLngLat: mockPopupSetLngLat,
-    setHTML: mockPopupSetHTML,
-    addTo: mockPopupAddTo,
-    on: mockPopupOn,
-    remove: mockPopupRemove,
-  }));
+  const MockPopup = vi.fn(function () {
+    return {
+      setLngLat: mockPopupSetLngLat,
+      setHTML: mockPopupSetHTML,
+      addTo: mockPopupAddTo,
+      on: mockPopupOn,
+      remove: mockPopupRemove,
+    };
+  });
 
   return {
     mockSetData,

@@ -9,7 +9,10 @@ const { mockClose, MockFleetWSClient } = vi.hoisted<{
   MockFleetWSClient: ReturnType<typeof vi.fn>;
 }>(() => {
   const mockClose = vi.fn();
-  const MockFleetWSClient = vi.fn().mockImplementation(() => ({ close: mockClose }));
+  // Regular function (not arrow) so Reflect.construct works in vitest 4.x
+  const MockFleetWSClient = vi.fn(function () {
+    return { close: mockClose };
+  });
   return { mockClose, MockFleetWSClient };
 });
 

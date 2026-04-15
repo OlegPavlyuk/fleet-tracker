@@ -6,6 +6,7 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     css: false,
+    pool: 'forks', // each test file in its own process — prevents React act() conflicts when running alongside other workspaces
     coverage: {
       provider: 'v8',
     },
