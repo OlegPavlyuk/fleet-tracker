@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 12 — `apps/emulator` drone simulator CLI
+- **Current step**: ready to start v1 Step 13 — `apps/web` foundation (Vite + React + router + auth flow)
 - **Branch**: `main`
-- **Last session**: 2026-04-15 — v1 Step 11 complete
+- **Last session**: 2026-04-15 — v1 Step 12 complete
 
 ## Next up
 
@@ -24,6 +24,7 @@ After Iteration 0 finishes:
 - [x] **v1 Step 9**: Persist queue — write-behind ring-buffer + dual-trigger flush → Drizzle batch insert
 - [x] **v1 Step 10**: Realtime WS — `/ws/stream`, JWT auth, snapshot on connect, update broadcast
 - [x] **v1 Step 11**: History endpoint — `GET /telemetry/history?drone_id&from&to[&bbox]`, PostGIS ST_Within + time range
+- [x] **v1 Step 12**: `apps/emulator` — drone simulator CLI (auto-provision via REST, N DroneClient WS connections)
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -73,6 +74,16 @@ After Iteration 0 finishes:
 - Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
 - Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
+
+### 2026-04-15 (session 3)
+
+- Completed v1 Step 12: `apps/emulator` drone simulator CLI
+- Pure flight model in `drone.ts`: random bbox spawn, heading/speed jitter, bbox bounce, 0.1%/s battery drain
+- `api.ts`: fetch-based HTTP client — `login` (→ JWT) + `registerDrone` (POST /drones → id + plain-text device token)
+- `client.ts`: `DroneClient` — one `ws` connection per drone, setInterval tick loop, auto-reconnect on close
+- `index.ts`: CLI entry reads env (EMULATOR_EMAIL, EMULATOR_PASSWORD, DRONE_COUNT, TICK_MS, BBOX), provisions N drones via REST, starts all WS clients, handles SIGINT/SIGTERM
+- 14 unit tests (TDD) for flight model, 141 total, 0 type errors, 0 lint errors
+- Next: v1 Step 13 — `apps/web` foundation (Vite + React + router + TanStack Query + auth flow)
 
 ### 2026-04-15 (session 2)
 
