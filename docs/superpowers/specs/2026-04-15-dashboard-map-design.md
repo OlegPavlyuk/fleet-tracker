@@ -92,6 +92,28 @@ useDroneStore (apps/web/src/lib/droneStore.ts)
 4. **One WS connection** — `useEffect` cleanup calls `client.close()` before any new client is created; `[token]` dep ensures reconnect is always clean
 5. **`droneId` is the stable key** — all updates match snapshot entries by `droneId`; popup checks `drones.has(selectedId)` before rendering
 
+## Edge-case contracts
+
+### Snapshot ordering
+
+The WS server sends exactly one `snapshot` on connect (full state), followed by `update` messages. The single TCP connection guarantees message order within a session. `snapshot` is always **authoritative** — it fully replaces state regardless of any prior `update` messages received. If a reconnect happens, the new `snapshot` wins over any stale in-memory state.
+
+### Map source readiness guard
+
+`setData()` must only be called after the MapLibre style has loaded and the source exists. Implementation: set a `isMapReady` ref to `true` inside `map.on('load', ...)`, and guard the data-update effect with `if (!isMapReady.current) return`. This prevents calling `getSource('drones')` before the source is registered.
+
+### `FleetWSClient` safe shutdown
+
+`FleetWSClient` maintains an internal `isClosed: boolean` flag, set to `true` in `close()`. Every callback invocation (`onSnapshot`, `onUpdate`, `onError`) checks `if (this.isClosed) return` before firing. This ensures that no callbacks are dispatched after cleanup, even if a buffered `message` event fires after `close()` is called.
+
+### Popup lifecycle
+
+A single `maplibregl.Popup` instance is held in a `popupRef`. The popup effect (`deps: [selectedId]`) always calls `popupRef.current?.remove()` first, then creates/shows a new popup only if `selectedId !== null && drones.has(selectedId)`. This prevents popup accumulation and handles the case where `selectedId` refers to a drone that has left the snapshot.
+
+### TanStack Query cache for drone list
+
+`useQuery` for `GET /drones` is called with `staleTime: 10 * 60 * 1000` (10 minutes). Drone metadata (name, model) changes only on explicit user action — frequent re-fetches add no value and create unnecessary network chatter. Both `DroneList` and the popup use the same query key `['drones']` and hit the cache.
+
 ---
 
 ## Popup content
