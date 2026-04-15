@@ -45,7 +45,7 @@ export class PersistQueue {
     }
   }
 
-  private async flush(): Promise<void> {
+  async flush(): Promise<void> {
     if (this.isFlushing || this.entries.length === 0) return;
     this.isFlushing = true;
     const batch = this.entries.splice(0); // atomic drain (JS single-threaded)
