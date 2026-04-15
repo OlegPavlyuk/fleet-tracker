@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 14 — Dashboard map (MapLibre + WS subscription + markers + popup)
+- **Current step**: ready to start v1 Step 15 — History view (replay path on map)
 - **Branch**: `main`
-- **Last session**: 2026-04-15 — v1 Step 13 complete
+- **Last session**: 2026-04-15 — v1 Step 14 complete
 
 ## Next up
 
@@ -26,6 +26,7 @@ After Iteration 0 finishes:
 - [x] **v1 Step 11**: History endpoint — `GET /telemetry/history?drone_id&from&to[&bbox]`, PostGIS ST_Within + time range
 - [x] **v1 Step 12**: `apps/emulator` — drone simulator CLI (auto-provision via REST, N DroneClient WS connections)
 - [x] **v1 Step 13**: `apps/web` foundation — Vite + React + react-router + TanStack Query + Zustand auth store + typed API client + Login/Register/Dashboard/History pages
+- [x] **v1 Step 14**: Dashboard map — MapLibre GL JS GeoJSON circle layer + `FleetWSClient` + `useFleetWS` hook + `useDroneStore` (Zustand) + `DroneList` sidebar + popup on drone click
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -64,6 +65,22 @@ After Iteration 0 finishes:
 | v7        | future | Production hardening: graceful shutdown, OTel, Grafana, prod images                                     |
 
 ## Session log (most recent first)
+
+### 2026-04-15 (session 5)
+
+- Completed v1 Step 14: Dashboard map
+- `FleetWSClient` (plain TS class) — WebSocket lifecycle, `snapshot`/`update` message dispatch, `isClosed` guard prevents post-close callbacks
+- `useDroneStore` (Zustand) — `Map<droneId, StateSnapshot>`, `selectedId`, `setSnapshot`/`updateDrone`/`selectDrone` actions
+- `useFleetWS` hook — creates/cleans up `FleetWSClient` tied to auth token, wires callbacks to store
+- `DroneList.tsx` — sidebar reads store + TanStack Query drone names, sorted rows with status colour + battery %, click selects
+- `Map.tsx` — MapLibre GeoJSON `circle` layer updated from store, floating popup on select, click on empty map deselects; component named `DroneMap` internally to avoid shadowing the built-in `Map` constructor
+- Fixes:
+  - `vi.hoisted` needed for mock variables referenced in `vi.mock` factories (temporal dead zone with `const`)
+  - Store state changes outside React rendering cycle require `act()` wrapping in tests
+  - `vi.fn().mockImplementation(arrowFn)` fails as constructor in vitest 4.x (root workspace) because `Reflect.construct(arrowFn)` is invalid; fixed by using regular `function()` declarations
+  - `pool: 'forks'` added to web vitest config to prevent React `act()` conflicts in parallel runs
+- 28 new tests (192 total), 0 type errors, 0 lint errors
+- Next: v1 Step 15 — History view (replay path on map)
 
 ### 2026-04-14
 
