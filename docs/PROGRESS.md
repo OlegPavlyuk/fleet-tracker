@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 13 — `apps/web` foundation (Vite + React + router + auth flow)
+- **Current step**: ready to start v1 Step 14 — Dashboard map (MapLibre + WS subscription + markers + popup)
 - **Branch**: `main`
-- **Last session**: 2026-04-15 — v1 Step 12 complete
+- **Last session**: 2026-04-15 — v1 Step 13 complete
 
 ## Next up
 
@@ -25,6 +25,7 @@ After Iteration 0 finishes:
 - [x] **v1 Step 10**: Realtime WS — `/ws/stream`, JWT auth, snapshot on connect, update broadcast
 - [x] **v1 Step 11**: History endpoint — `GET /telemetry/history?drone_id&from&to[&bbox]`, PostGIS ST_Within + time range
 - [x] **v1 Step 12**: `apps/emulator` — drone simulator CLI (auto-provision via REST, N DroneClient WS connections)
+- [x] **v1 Step 13**: `apps/web` foundation — Vite + React + react-router + TanStack Query + Zustand auth store + typed API client + Login/Register/Dashboard/History pages
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -74,6 +75,20 @@ After Iteration 0 finishes:
 - Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
 - Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
+
+### 2026-04-15 (session 4)
+
+- Completed v1 Step 13: `apps/web` foundation
+- Zustand `useAuthStore` with `persist` middleware → localStorage under `fleet-auth` key
+- `http.ts`: thin `request<T>()` wrapper — reads token from store, sets `Authorization` header, throws typed `ApiError`
+- `api.ts`: typed endpoint functions for auth, drones, telemetry (all return typed TS interfaces)
+- `router.tsx`: `createBrowserRouter` — `/login`, `/register`, `/` (Dashboard), `/drones/:id/history` behind `AppLayout` auth guard
+- Shell components: `Map`, `DroneList`, `DroneMarker` (stubs for Step 14), `ws.ts` (stub for Step 14)
+- Pages: `Login`, `Register`, `Dashboard` (header + sidebar + map placeholder), `History` (stub)
+- Fixed: `router.tsx` needed `ReturnType<typeof createBrowserRouter>` annotation (TS2883 portable type)
+- Fixed: test mocks used `async` without `await` — changed to `() => Promise.resolve()`; `vite.config.ts` added to ESLint `allowDefaultProject`
+- 23 new web tests, 164 total, 0 type errors, 0 lint errors
+- Next: v1 Step 14 — Dashboard map (MapLibre + WS subscription + markers + popup)
 
 ### 2026-04-15 (session 3)
 
