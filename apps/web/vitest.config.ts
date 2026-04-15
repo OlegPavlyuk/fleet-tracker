@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'happy-dom',
+    css: false,
     coverage: {
       provider: 'v8',
     },
