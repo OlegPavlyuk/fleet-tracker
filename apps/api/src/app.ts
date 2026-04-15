@@ -9,6 +9,8 @@ import { createAuthRouter } from './auth/index.js';
 import { makeDbAuthDeps } from './auth/db-deps.js';
 import { createDroneRouter } from './drones/index.js';
 import { makeDbDroneDeps } from './drones/index.js';
+import { createTelemetryRouter } from './telemetry/index.js';
+import { makeDbTelemetryDeps } from './telemetry/index.js';
 
 export function createApp(): Express {
   const app = express();
@@ -28,6 +30,7 @@ export function createApp(): Express {
 
   app.use('/auth', createAuthRouter(makeDbAuthDeps()));
   app.use('/drones', createDroneRouter(makeDbDroneDeps()));
+  app.use('/telemetry', createTelemetryRouter(makeDbTelemetryDeps()));
 
   // 404 catch-all — must be after routes, before error middleware
   app.use((_req, res) => {

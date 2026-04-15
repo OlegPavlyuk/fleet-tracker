@@ -5,9 +5,9 @@
 ## Current state
 
 - **Active iteration**: v1
-- **Current step**: ready to start v1 Step 11 — history endpoint (`/telemetry/history`)
+- **Current step**: ready to start v1 Step 12 — `apps/emulator` drone simulator CLI
 - **Branch**: `main`
-- **Last session**: 2026-04-15 — v1 Step 10 complete
+- **Last session**: 2026-04-15 — v1 Step 11 complete
 
 ## Next up
 
@@ -23,6 +23,7 @@ After Iteration 0 finishes:
 - [x] **v1 Step 8**: State manager — in-memory `Map<droneId, StateSnapshot>` + EventEmitter
 - [x] **v1 Step 9**: Persist queue — write-behind ring-buffer + dual-trigger flush → Drizzle batch insert
 - [x] **v1 Step 10**: Realtime WS — `/ws/stream`, JWT auth, snapshot on connect, update broadcast
+- [x] **v1 Step 11**: History endpoint — `GET /telemetry/history?drone_id&from&to[&bbox]`, PostGIS ST_Within + time range
 
 (Full step list — see `~/.claude/plans/valiant-greeting-rabbit.md` § "Implementation steps v1")
 
@@ -72,6 +73,17 @@ After Iteration 0 finishes:
 - Completed v1 Step 2: packages/shared zod schemas (TelemetryMessage, StateSnapshot, ClientMessage, ServerMessage) + constants + 23 tests
 - Context7 MCP connected ✓
 - Next: v1 Step 3 — DB layer (docker-compose PostGIS, Drizzle schema, migration)
+
+### 2026-04-15 (session 2)
+
+- Completed v1 Step 11: `GET /telemetry/history` endpoint
+- Zod query validation: `drone_id` (UUID), `from`/`to` (Unix ms), optional `bbox` (minLng,minLat,maxLng,maxLat)
+- Ownership check: 404 if drone not found, 403 if belongs to another user
+- DB deps: Drizzle + PostGIS — `ST_Y/ST_X` for lat/lng projection, `ST_Within(ST_MakeEnvelope(...))` for bbox, ordered by `ts ASC`, limit 5000
+- Key lesson: Zod v4 UUID regex is RFC-strict — version digit must be `[1-8]`; test UUIDs must use real version numbers
+- Key lesson: Zod v4 errors are under `.issues`, not `.errors`
+- 13 new tests, 104 total, 0 type errors, 0 lint errors
+- Next: v1 Step 12 — `apps/emulator` drone simulator CLI
 
 ### 2026-04-15
 
