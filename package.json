@@ -17,6 +17,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
     "test": "vitest run",
     "test:integration": "pnpm --filter api test:integration",
+    "test:e2e": "pnpm --filter web test:e2e",
     "typecheck": "pnpm -r typecheck",
     "prepare": "husky"
   },
