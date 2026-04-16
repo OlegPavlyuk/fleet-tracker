@@ -42,15 +42,15 @@ describe('POST /drones — integration', () => {
       .send({ name: 'Alpha', model: 'DJI Mini' });
 
     expect(res.status).toBe(201);
-    const body = res.body as { id: string; deviceToken: string };
-    expect(typeof body.id).toBe('string');
+    const body = res.body as { drone: { id: string }; deviceToken: string };
+    expect(typeof body.drone.id).toBe('string');
     expect(typeof body.deviceToken).toBe('string');
 
     // Verify DB row: token is stored as SHA-256 hash
     const [row] = await testDb.db
       .select({ deviceTokenHash: drones.deviceTokenHash })
       .from(drones)
-      .where(eq(drones.id, body.id));
+      .where(eq(drones.id, body.drone.id));
     const expectedHash = createHash('sha256').update(body.deviceToken).digest('hex');
     expect(row?.deviceTokenHash).toBe(expectedHash);
   });
@@ -76,7 +76,7 @@ describe('PATCH /drones/:id — integration', () => {
       .post('/drones')
       .set('Authorization', `Bearer ${userToken}`)
       .send({ name: 'Gamma', model: 'DJI Mavic' });
-    const { id } = create.body as { id: string };
+    const { id } = (create.body as { drone: { id: string } }).drone;
 
     const patch = await request(app)
       .patch(`/drones/${id}`)
@@ -98,7 +98,7 @@ describe('DELETE /drones/:id — integration', () => {
       .post('/drones')
       .set('Authorization', `Bearer ${userToken}`)
       .send({ name: 'Delta', model: 'DJI Phantom' });
-    const { id } = create.body as { id: string };
+    const { id } = (create.body as { drone: { id: string } }).drone;
 
     const del = await request(app)
       .delete(`/drones/${id}`)
@@ -127,11 +127,11 @@ describe('DELETE /drones/:id — integration', () => {
       .post('/drones')
       .set('Authorization', `Bearer ${userToken}`)
       .send({ name: 'Epsilon', model: 'DJI Pro' });
-    const { id } = create.body as { id: string };
+    const { id } = (create.body as { drone: { id: string } }).drone;
 
     const del = await request(app)
       .delete(`/drones/${id}`)
       .set('Authorization', `Bearer ${otherToken}`);
-    expect(del.status).toBe(403);
+    expect(del.status).toBe(404);
   });
 });

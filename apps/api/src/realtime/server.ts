@@ -1,4 +1,5 @@
-import http from 'node:http';
+// Import from 'http' (not 'node:http') so pino-http module augmentation on IncomingMessage applies
+import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import type { ServerMessage, StateSnapshot } from '@fleet-tracker/shared';
 import type { TokenPayload } from '../auth/jwt.js';
@@ -14,7 +15,16 @@ export interface RealtimeDeps {
 }
 
 export function attachRealtimeWs(server: http.Server, deps: RealtimeDeps): WebSocketServer {
-  const wss = new WebSocketServer({ server, path: '/ws/stream' });
+  const wss = new WebSocketServer({ noServer: true });
+
+  server.on('upgrade', (req, socket, head) => {
+    const pathname = (req.url ?? '').split('?')[0];
+    if (pathname === '/ws/stream') {
+      wss.handleUpgrade(req, socket, head, (client) => {
+        wss.emit('connection', client, req);
+      });
+    }
+  });
 
   wss.on('connection', (ws, req) => {
     void (async () => {

@@ -38,8 +38,8 @@ async function createDrone(token: string): Promise<{ droneId: string; deviceToke
     .set('Authorization', `Bearer ${token}`)
     .send({ name: 'WS Test Drone', model: 'DJI' });
   expect(res.status).toBe(201);
-  const body = res.body as { id: string; deviceToken: string };
-  return { droneId: body.id, deviceToken: body.deviceToken };
+  const body = res.body as { drone: { id: string }; deviceToken: string };
+  return { droneId: body.drone.id, deviceToken: body.deviceToken };
 }
 
 function wsUrl(path: string): string {

@@ -36,7 +36,7 @@ export interface TestServerHandle {
 export async function startContainer(): Promise<TestDb> {
   const container = await new PostgreSqlContainer('postgis/postgis:16-3.4').start();
   const pgClient = postgres(container.getConnectionUri(), { max: 5 });
-  const db = drizzle(pgClient, { schema }) as AppDb;
+  const db = drizzle(pgClient, { schema });
   await migrate(db, { migrationsFolder: MIGRATIONS_PATH });
   return { db, pgClient, container };
 }

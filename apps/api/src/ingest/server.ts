@@ -1,6 +1,7 @@
-import http from 'node:http';
+// Import from 'http' (not 'node:http') so pino-http module augmentation on IncomingMessage applies
+import http from 'http';
 import { createHash } from 'node:crypto';
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, type RawData } from 'ws';
 import { TelemetryMessageSchema, type TelemetryMessage } from '@fleet-tracker/shared';
 
 export interface IngestDeps {
@@ -9,9 +10,22 @@ export interface IngestDeps {
 }
 
 export function attachIngestWs(server: http.Server, deps: IngestDeps): WebSocketServer {
-  const wss = new WebSocketServer({ server, path: '/ws/ingest' });
+  const wss = new WebSocketServer({ noServer: true });
+
+  server.on('upgrade', (req, socket, head) => {
+    const pathname = (req.url ?? '').split('?')[0];
+    if (pathname === '/ws/ingest') {
+      wss.handleUpgrade(req, socket, head, (client) => {
+        wss.emit('connection', client, req);
+      });
+    }
+  });
 
   wss.on('connection', (ws, req) => {
+    // Buffer frames that arrive before async auth completes so they are not lost.
+    const pending: RawData[] = [];
+    ws.on('message', (raw) => pending.push(raw));
+
     void (async () => {
       // ── 1. Extract and verify device token ──────────────────────────────────
       const url = new URL(req.url ?? '', 'ws://localhost');
@@ -33,7 +47,7 @@ export function attachIngestWs(server: http.Server, deps: IngestDeps): WebSocket
       const droneId = drone.id;
 
       // ── 2. Handle incoming telemetry frames ──────────────────────────────────
-      ws.on('message', (raw) => {
+      function handleMessage(raw: RawData): void {
         const text = Buffer.isBuffer(raw)
           ? raw.toString('utf8')
           : Array.isArray(raw)
@@ -55,7 +69,12 @@ export function attachIngestWs(server: http.Server, deps: IngestDeps): WebSocket
         }
 
         deps.onTelemetry(droneId, result.data);
-      });
+      }
+
+      // Swap out the buffer listener and replay any frames that arrived during auth.
+      ws.removeAllListeners('message');
+      for (const raw of pending) handleMessage(raw);
+      ws.on('message', handleMessage);
     })();
   });
 

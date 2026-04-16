@@ -44,7 +44,8 @@ describe('Pipeline consistency — N messages in → N broadcasts + N DB rows', 
       .set('Authorization', `Bearer ${token}`)
       .send({ name: 'Pipeline Drone', model: 'DJI' });
     expect(droneRes.status).toBe(201);
-    const { id: droneId, deviceToken } = droneRes.body as { id: string; deviceToken: string };
+    const { deviceToken } = droneRes.body as { deviceToken: string };
+    const { id: droneId } = (droneRes.body as { drone: { id: string } }).drone;
 
     // 2. Connect stream client — drain snapshot
     const streamWs = new WebSocket(`${wsUrl('/ws/stream')}?token=${token}`);

@@ -11,7 +11,12 @@ export function collectMessages<T>(ws: WebSocket, count: number, maxWaitMs = 500
 
     ws.on('message', (raw) => {
       try {
-        collected.push(JSON.parse(raw.toString()) as T);
+        const str = Buffer.isBuffer(raw)
+          ? raw.toString('utf8')
+          : Array.isArray(raw)
+            ? Buffer.concat(raw).toString('utf8')
+            : Buffer.from(raw).toString('utf8');
+        collected.push(JSON.parse(str) as T);
       } catch {
         // ignore non-JSON frames
       }

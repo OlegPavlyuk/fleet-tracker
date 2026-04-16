@@ -9,6 +9,6 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "playwright.config.ts", "e2e/**/*"],
   "exclude": ["node_modules", "dist"]
 }
