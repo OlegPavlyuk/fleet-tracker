@@ -50,6 +50,6 @@ export async function registerDrone(client: ApiClient, name: string): Promise<Pr
     throw new Error(`Register drone "${name}" failed (${res.status}): ${body}`);
   }
 
-  const data = (await res.json()) as { id: string; deviceToken: string };
-  return { id: data.id, name, deviceToken: data.deviceToken };
+  const data = (await res.json()) as { drone: { id: string }; deviceToken: string };
+  return { id: data.drone.id, name, deviceToken: data.deviceToken };
 }
