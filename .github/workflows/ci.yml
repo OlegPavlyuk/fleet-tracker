@@ -1,0 +1,196 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  # ──────────────────────────────────────────────
+  # Job 1: Static analysis
+  # ──────────────────────────────────────────────
+  check:
+    name: Check (lint · typecheck · format)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        # reads packageManager field from root package.json — no version pin needed
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @fleet-tracker/shared build
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+  # ──────────────────────────────────────────────
+  # Job 2: Unit tests (no external services)
+  # ──────────────────────────────────────────────
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @fleet-tracker/shared build
+
+      - name: Run unit tests
+        run: pnpm test
+        # test-setup.ts injects all required env vars — no secrets needed here
+
+  # ──────────────────────────────────────────────
+  # Job 3: Integration tests (testcontainers PostGIS)
+  # ──────────────────────────────────────────────
+  integration:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @fleet-tracker/shared build
+
+      - name: Run integration tests
+        run: pnpm test:integration
+        # testcontainers pulls the PostGIS image and manages its own container lifecycle.
+        # Docker is pre-installed on ubuntu-latest.
+        # test-setup.ts satisfies config.ts validation — no GitHub secrets needed.
+
+  # ──────────────────────────────────────────────
+  # Job 4: E2E smoke tests (full stack + Playwright)
+  # ──────────────────────────────────────────────
+  e2e:
+    name: E2E smoke tests
+    runs-on: ubuntu-latest
+    needs: [check, unit, integration]
+    if: |
+      github.ref == 'refs/heads/main' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') ||
+      github.event_name == 'workflow_dispatch'
+
+    env:
+      # Consumed by apps/api/src/config.ts (fail-fast on missing/short value)
+      JWT_SECRET: ${{ secrets.CI_JWT_SECRET }}
+      # Matches docker-compose.yml: user=postgres, password=password, db=fleet_tracker
+      DATABASE_URL: postgres://postgres:password@localhost:5432/fleet_tracker
+      # NODE_ENV=test mounts the /test/seed-telemetry route (see apps/api/src/app.ts:38)
+      NODE_ENV: test
+      PORT: 3000
+      # Consumed by apps/web/e2e/smoke.spec.ts:4
+      API_BASE_URL: http://localhost:3000
+      # Consumed by apps/web/playwright.config.ts (baseURL)
+      WEB_BASE_URL: http://localhost:5173
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @fleet-tracker/shared build
+
+      # ── Start PostGIS ──────────────────────────
+      - name: Start PostGIS
+        run: docker compose up -d
+        # docker-compose.yml has a healthcheck; we wait for it below
+
+      - name: Wait for PostGIS to be ready
+        run: |
+          until docker compose exec -T db pg_isready -U postgres -d fleet_tracker; do
+            echo "Waiting for PostGIS..."
+            sleep 2
+          done
+
+      - name: Apply database migrations
+        run: pnpm --filter api db:migrate
+
+      # ── Build and start API ────────────────────
+      - name: Build API
+        run: pnpm --filter api build
+
+      - name: Start API server (background)
+        run: node apps/api/dist/index.js &
+        # API reads JWT_SECRET, DATABASE_URL, NODE_ENV, PORT from the job env block above
+
+      # ── Build and serve web ────────────────────
+      - name: Build web
+        run: pnpm --filter web build
+
+      - name: Start web preview server (background)
+        run: npx vite preview --port 5173 &
+        working-directory: apps/web
+        # vite preview default port is 4173 — must specify 5173 to match Playwright baseURL
+
+      # ── Healthcheck before Playwright ─────────
+      - name: Wait for services
+        run: npx wait-on http://localhost:3000/health http://localhost:5173 --timeout 30000
+
+      # ── Playwright ────────────────────────────
+      - name: Install Playwright (Chromium only)
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E smoke tests
+        run: pnpm test:e2e
+
+      # ── Artifacts (best-effort) ───────────────
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report/
+          # This artifact may not exist if the failure occurred before Playwright started.
+          # upload-artifact@v4 will log a warning but not fail the job in that case.
+          retention-days: 7
+
+      # ── Cleanup (always runs) ─────────────────
+      - name: Teardown
+        if: always()
+        run: docker compose down -v
+        # -v removes named volumes (pgdata) — safe because CI runners are stateless.
+        # Each run starts with a clean slate regardless.
