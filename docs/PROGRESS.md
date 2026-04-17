@@ -4,10 +4,19 @@
 
 ## Current state
 
-- **Active iteration**: v1
-- **Current step**: v1 complete — all steps done
+- **Active iteration**: v1 complete + CI/CD wired up
+- **Current step**: ready for v2
 - **Branch**: `main`
-- **Last session**: 2026-04-16 — v1 Step 16 complete
+- **Last session**: 2026-04-17 — GitHub repo created, CI/CD pipeline live
+
+## CI/CD
+
+- **Repo**: https://github.com/OlegPavlyuk/fleet-tracker
+- **Pipeline**: `.github/workflows/ci.yml` — 4 jobs: `check`, `unit`, `integration`, `e2e`
+- **Auto-triggers**: every `git push` runs check/unit/integration; push to `main` also runs e2e
+- **Manual trigger**: `gh workflow run ci.yml` (runs all 4 jobs including e2e)
+- **Watch runs**: `gh run watch <run-id>` or Actions tab on GitHub
+- **Branch protection**: `main` requires check + unit + integration to pass before merge
 
 ## Next up
 
