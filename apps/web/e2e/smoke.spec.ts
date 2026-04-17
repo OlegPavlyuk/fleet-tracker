@@ -9,7 +9,7 @@ interface RegisterResponse {
 }
 
 interface DroneResponse {
-  id: string;
+  drone: { id: string };
   deviceToken: string;
 }
 
@@ -88,7 +88,7 @@ test.describe('Smoke — History view', () => {
     token = t;
     userId = user.id;
     const drone = await createDrone(token);
-    droneId = drone.id;
+    droneId = drone.drone.id;
     // Seed 6 telemetry points spread over the last 10 minutes
     await seedTelemetry(token, droneId, 6);
   });
