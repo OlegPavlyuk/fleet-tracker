@@ -173,6 +173,7 @@ jobs:
       # ── Playwright ────────────────────────────
       - name: Install Playwright (Chromium only)
         run: npx playwright install --with-deps chromium
+        working-directory: apps/web
 
       - name: Run E2E smoke tests
         run: pnpm test:e2e
