@@ -193,7 +193,7 @@ steps:
 
 ### Background process notes
 
-API and web servers are started with `&` (shell background). This is a simple, zero-dependency approach suitable for CI. If process management becomes unreliable (port conflicts, zombie processes), it can be replaced with a dedicated tool such as `concurrently` or `npx serve`. The `if: always()` teardown and `docker-compose down -v` handle cleanup regardless of exit code.
+API and web servers are started with `&` (shell background). This is a simple, zero-dependency approach suitable for CI. If process management becomes unreliable (port conflicts, zombie processes), prefer replacing with `start-server-and-test` (or equivalent orchestrator) over adding more shell workarounds — it handles readiness polling and cleanup in one step. The `if: always()` teardown and `docker-compose down -v` handle cleanup regardless of exit code.
 
 ---
 
