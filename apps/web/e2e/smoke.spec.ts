@@ -110,8 +110,7 @@ test.describe('Smoke — History view', () => {
     );
 
     await page.goto(`/drones/${droneId}/history`);
-    await page.getByRole('button', { name: /last 5 min/i }).click();
-    await page.getByRole('button', { name: /load/i }).click();
+    await page.getByRole('button', { name: /last 5m/i }).click();
 
     // Stats bar should show at least 1 point
     await expect(page.getByText(/\d+\s*points/i)).toBeVisible();
