@@ -44,8 +44,6 @@ const geometryPolygon = customType<{ data: GeoPolygon; driverData: string }>({
   },
 });
 
-// ── Tables ─────────────────────────────────────────────────────────────────────
-
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').unique().notNull(),
@@ -96,8 +94,6 @@ export const zones = pgTable('zones', {
   polygon: geometryPolygon('polygon').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
-
-// ── Inferred types ─────────────────────────────────────────────────────────────
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;

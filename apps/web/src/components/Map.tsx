@@ -111,14 +111,12 @@ function DroneMap() {
         },
       });
 
-      // Click on a drone marker
       map.on('click', 'drones', (e) => {
         const feature = e.features?.[0];
         const droneId = feature?.properties?.droneId as string | undefined;
         if (droneId) selectDrone(droneId);
       });
 
-      // Click on empty map area deselects
       map.on('click', (e) => {
         const hits = map.queryRenderedFeatures(e.point, { layers: ['drones'] });
         if (hits.length === 0) selectDrone(null);

@@ -65,7 +65,6 @@ export class DroneClient {
         this.timer = null;
       }
       if (!this.stopped) {
-        // Reconnect after 3 seconds
         const reasonStr = reason.toString();
         console.error(
           `[${this.state.droneId}] WS closed (${code} ${reasonStr}), reconnecting in 3s…`,

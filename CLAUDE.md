@@ -118,7 +118,7 @@ pnpm --filter api db:migrate           # apply migrations
 
 ## References
 
-- `docs/PROGRESS.md` — current state, what's done, what's next
+- `PROJECT_SUMMARY.md` — project overview, v1 features, architecture, v2 focus
 - `docs/DECISIONS.md` — non-obvious decisions with rationale
-- `~/.claude/plans/valiant-greeting-rabbit.md` — full v1 implementation plan
-- `docs/superpowers/specs/` — design specs for future iterations
+- `ArchiveDocuments/PROGRESS.md` — v1 session log (archived)
+- `ArchiveDocuments/superpowers/` — v1 design specs and implementation plans (archived)

@@ -17,7 +17,6 @@ export interface DroneState {
   battery_pct: number;
 }
 
-// Degrees → radians
 function toRad(deg: number): number {
   return (deg * Math.PI) / 180;
 }
@@ -27,7 +26,6 @@ function normHeading(deg: number): number {
   return ((deg % 360) + 360) % 360;
 }
 
-// Linear interpolation between two values
 function lerp(min: number, max: number, t: number): number {
   return min + (max - min) * t;
 }
@@ -66,7 +64,6 @@ export function tick(state: DroneState, bbox: BBox, deltaMs: number): DroneState
   const speed = Math.max(2, Math.min(30, state.speed_mps + speedJitter));
 
   // ── Advance position ─────────────────────────────────────────────────────────
-  // Distance covered in metres
   const dist = speed * deltaS;
 
   // Convert to degree deltas
@@ -79,7 +76,6 @@ export function tick(state: DroneState, bbox: BBox, deltaMs: number): DroneState
   let newLng = state.lng + lngDelta;
 
   // ── Bounce off bbox walls ────────────────────────────────────────────────────
-  // If out of bounds, clamp position and reflect heading component
   let headingDeg = heading;
 
   if (newLat > bbox.maxLat || newLat < bbox.minLat) {
