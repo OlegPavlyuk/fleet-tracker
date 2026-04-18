@@ -154,12 +154,26 @@ function DroneMap() {
     }
   }, [drones]);
 
-  // ── Create popup when a drone is selected ──────────────────────────────────
-  useEffect(() => {
-    popupRef.current?.remove();
-    popupRef.current = null;
+  // Tracks which droneId the open popup belongs to, and whether we are
+  // programmatically removing it (so the close handler doesn't cascade).
+  const popupForIdRef = useRef<string | null>(null);
+  const isInternalRemoveRef = useRef(false);
 
-    if (!selectedId || !mapRef.current || !isMapReadyRef.current) return;
+  // ── Create / update popup when a drone is selected or its data changes ──────
+  useEffect(() => {
+    if (!mapRef.current || !isMapReadyRef.current) return;
+
+    if (!selectedId) {
+      // Deselect: remove popup without triggering selectDrone(null) cascade
+      if (popupRef.current) {
+        isInternalRemoveRef.current = true;
+        popupRef.current.remove();
+        popupRef.current = null;
+        popupForIdRef.current = null;
+        isInternalRemoveRef.current = false;
+      }
+      return;
+    }
 
     const drone = drones.get(selectedId);
     if (!drone) {
@@ -167,13 +181,32 @@ function DroneMap() {
       return;
     }
 
+    const html = buildPopupHtml(drone, nameMap.get(selectedId) ?? selectedId);
+
+    if (popupRef.current && popupForIdRef.current === selectedId) {
+      // Same drone, telemetry update → update in-place (no flicker, no cascade)
+      popupRef.current.setLngLat([drone.lng, drone.lat]).setHTML(html);
+      return;
+    }
+
+    // New drone selected (or no popup yet) → remove old, create new
+    if (popupRef.current) {
+      isInternalRemoveRef.current = true;
+      popupRef.current.remove();
+      popupRef.current = null;
+      isInternalRemoveRef.current = false;
+    }
+
     const popup = new maplibregl.Popup({ closeButton: true, maxWidth: '240px' })
       .setLngLat([drone.lng, drone.lat])
-      .setHTML(buildPopupHtml(drone, nameMap.get(selectedId) ?? selectedId))
+      .setHTML(html)
       .addTo(mapRef.current);
 
-    popup.on('close', () => selectDrone(null));
+    popup.on('close', () => {
+      if (!isInternalRemoveRef.current) selectDrone(null);
+    });
     popupRef.current = popup;
+    popupForIdRef.current = selectedId;
   }, [selectedId, drones, nameMap, selectDrone]);
 
   return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;

@@ -24,3 +24,8 @@ export const useDroneStore = create<DroneState>()((set) => ({
 
   selectDrone: (id) => set({ selectedId: id }),
 }));
+
+// Expose store for e2e tests in dev mode only
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
+  (window as unknown as Record<string, unknown>)['__droneStore'] = useDroneStore;
+}
