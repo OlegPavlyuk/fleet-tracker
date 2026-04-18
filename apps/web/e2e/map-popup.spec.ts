@@ -76,7 +76,7 @@ test.describe('Map popup stability', () => {
           };
         };
         store.getState().setSnapshot([snap]);
-        store.getState().selectDrone(snap.droneId as string);
+        store.getState().selectDrone(snap.droneId);
       },
       [DRONE_SNAPSHOT] as [typeof DRONE_SNAPSHOT],
     );
