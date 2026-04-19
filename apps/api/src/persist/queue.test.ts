@@ -180,6 +180,26 @@ describe('PersistQueue', () => {
     await queue.stop();
   });
 
+  it('push() accepts optional msgId and still flushes correctly', async () => {
+    const batches: TelemetryMessage[][] = [];
+    const queue = new PersistQueue(
+      makeDeps((rows) => batches.push(rows)),
+      { flushIntervalMs: 10_000, flushSize: 2 },
+    );
+
+    queue.push(baseEntry, 'msg-id-1');
+    queue.push(baseEntry, 'msg-id-2');
+
+    // size threshold reached — flush fires immediately
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(batches).toHaveLength(1);
+    expect(batches[0]).toHaveLength(2);
+
+    await queue.stop();
+  });
+
   it('drains remaining entries when stop() is called before interval fires', async () => {
     const batches: TelemetryMessage[][] = [];
     const queue = new PersistQueue(

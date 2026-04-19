@@ -19,6 +19,7 @@ describe('config', () => {
     process.env['JWT_EXPIRES_IN'] = '15m';
     process.env['PORT'] = '3000';
     process.env['NODE_ENV'] = 'test';
+    process.env['METRICS_TOKEN'] = 'test-metrics-token-16ch';
   }
 
   it('throws on missing DATABASE_URL', async () => {
@@ -60,5 +61,18 @@ describe('config', () => {
     delete process.env['NODE_ENV'];
     const { config } = await import('./config.js');
     expect(config.nodeEnv).toBe('development');
+  });
+
+  it('throws when METRICS_TOKEN is absent', async () => {
+    setValidEnv();
+    delete process.env['METRICS_TOKEN'];
+    await expect(import('./config.js')).rejects.toThrow();
+  });
+
+  it('includes metricsToken in config when present', async () => {
+    setValidEnv();
+    process.env['METRICS_TOKEN'] = 'test-metrics-token-16ch';
+    const { config } = await import('./config.js');
+    expect(config.metricsToken).toBe('test-metrics-token-16ch');
   });
 });

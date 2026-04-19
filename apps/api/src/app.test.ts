@@ -21,4 +21,26 @@ describe('createApp', () => {
     const res = await supertest(app).get('/health');
     expect(res.headers['content-type']).toMatch(/application\/json/);
   });
+
+  it('GET /metrics returns 401 without Authorization header', async () => {
+    const app = createApp();
+    const res = await supertest(app).get('/metrics');
+    expect(res.status).toBe(401);
+  });
+
+  it('GET /metrics returns 401 with wrong token', async () => {
+    const app = createApp();
+    const res = await supertest(app).get('/metrics').set('Authorization', 'Bearer wrong');
+    expect(res.status).toBe(401);
+  });
+
+  it('GET /metrics returns 200 with correct token', async () => {
+    const app = createApp();
+    // test-setup.ts sets METRICS_TOKEN='test-metrics-token-16ch'
+    const res = await supertest(app)
+      .get('/metrics')
+      .set('Authorization', 'Bearer test-metrics-token-16ch');
+    expect(res.status).toBe(200);
+    expect(res.headers['content-type']).toMatch(/text\/plain/);
+  });
 });

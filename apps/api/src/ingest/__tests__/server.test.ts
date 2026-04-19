@@ -124,7 +124,14 @@ describe('attachIngestWs', () => {
     ws.send(JSON.stringify(VALID_TELEMETRY));
 
     await vi.waitFor(() => {
-      expect(deps.onTelemetry).toHaveBeenCalledWith('drone-1', VALID_TELEMETRY);
+      expect(deps.onTelemetry).toHaveBeenCalledWith(
+        'drone-1',
+        VALID_TELEMETRY,
+        expect.objectContaining({
+          msgId: expect.any(String) as unknown,
+          serverRecvTs: expect.any(Number) as unknown,
+        }),
+      );
     });
 
     ws.close();

@@ -1,0 +1,239 @@
+{
+  "id": null,
+  "uid": "fleet-pipeline-overview",
+  "title": "Pipeline Overview",
+  "tags": ["fleet-tracker"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "time": { "from": "now-15m", "to": "now" },
+  "timepicker": {},
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Ingest Rate vs Persist Rate",
+      "description": "Divergence = growing persist debt",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(ingest_messages_total{result='ok'}[1m])",
+          "legendFormat": "ingest ok/s"
+        },
+        {
+          "refId": "B",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "rate(persist_flush_total{result='ok'}[1m]) * on() group_left() avg(persist_batch_size_sum / persist_batch_size_count)",
+          "legendFormat": "persist rows/s (approx)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "persist rows/s (approx)" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
+          }
+        ]
+      },
+      "options": { "tooltip": { "mode": "multi" } }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Stage Latency p50 / p95 / p99 (ms)",
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.50, sum(rate(validate_duration_ms_bucket[1m])) by (le))",
+          "legendFormat": "validate p50"
+        },
+        {
+          "refId": "B",
+          "expr": "histogram_quantile(0.95, sum(rate(validate_duration_ms_bucket[1m])) by (le))",
+          "legendFormat": "validate p95"
+        },
+        {
+          "refId": "C",
+          "expr": "histogram_quantile(0.50, sum(rate(state_update_duration_ms_bucket[1m])) by (le))",
+          "legendFormat": "state_update p50"
+        },
+        {
+          "refId": "D",
+          "expr": "histogram_quantile(0.95, sum(rate(state_update_duration_ms_bucket[1m])) by (le))",
+          "legendFormat": "state_update p95"
+        },
+        {
+          "refId": "E",
+          "expr": "histogram_quantile(0.50, sum(rate(persist_flush_duration_ms_bucket[1m])) by (le))",
+          "legendFormat": "persist_flush p50"
+        },
+        {
+          "refId": "F",
+          "expr": "histogram_quantile(0.95, sum(rate(persist_flush_duration_ms_bucket[1m])) by (le))",
+          "legendFormat": "persist_flush p95"
+        },
+        {
+          "refId": "G",
+          "expr": "histogram_quantile(0.50, sum(rate(broadcast_send_duration_ms_bucket[1m])) by (le))",
+          "legendFormat": "broadcast_send p50"
+        },
+        {
+          "refId": "H",
+          "expr": "histogram_quantile(0.95, sum(rate(broadcast_send_duration_ms_bucket[1m])) by (le))",
+          "legendFormat": "broadcast_send p95"
+        },
+        {
+          "refId": "I",
+          "expr": "histogram_quantile(0.99, sum(rate(server_ingress_to_broadcast_ms_bucket[1m])) by (le))",
+          "legendFormat": "ingress-to-broadcast p99"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ms" } }
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Persist Queue Depth",
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "persist_queue_size",
+          "legendFormat": "queue depth"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short" },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "queue depth" },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "yellow", "value": 500 },
+                    { "color": "red", "value": 800 }
+                  ]
+                }
+              },
+              { "id": "custom.thresholdsStyle", "value": { "mode": "line" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Queue Wait Time (ms)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 17 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.50, sum(rate(queue_wait_ms_bucket[1m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "refId": "B",
+          "expr": "histogram_quantile(0.95, sum(rate(queue_wait_ms_bucket[1m])) by (le))",
+          "legendFormat": "p95"
+        },
+        {
+          "refId": "C",
+          "expr": "histogram_quantile(0.99, sum(rate(queue_wait_ms_bucket[1m])) by (le))",
+          "legendFormat": "p99"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ms" } }
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "WebSocket Connections",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 17 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "ws_ingest_connections",
+          "legendFormat": "ingest"
+        },
+        {
+          "refId": "B",
+          "expr": "ws_stream_connections",
+          "legendFormat": "stream"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short" } }
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Error Rates",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 25 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "rate(ingest_messages_total{result='invalid'}[1m])",
+          "legendFormat": "invalid frames/s"
+        },
+        {
+          "refId": "B",
+          "expr": "rate(persist_flush_total{result='error'}[1m])",
+          "legendFormat": "flush errors/s"
+        },
+        {
+          "refId": "C",
+          "expr": "rate(persist_dropped_total[1m])",
+          "legendFormat": "dropped writes/s"
+        },
+        {
+          "refId": "D",
+          "expr": "rate(broadcast_send_failures_total[1m])",
+          "legendFormat": "broadcast failures/s"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "reqps" } }
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Broadcast Fanout Distribution (p50 / p95 / p99)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 25 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.50, sum(rate(broadcast_fanout_size_bucket[1m])) by (le))",
+          "legendFormat": "p50 clients"
+        },
+        {
+          "refId": "B",
+          "expr": "histogram_quantile(0.95, sum(rate(broadcast_fanout_size_bucket[1m])) by (le))",
+          "legendFormat": "p95 clients"
+        },
+        {
+          "refId": "C",
+          "expr": "histogram_quantile(0.99, sum(rate(broadcast_fanout_size_bucket[1m])) by (le))",
+          "legendFormat": "p99 clients"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short" } }
+    }
+  ]
+}

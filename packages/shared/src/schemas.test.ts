@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  BroadcastSnapshotSchema,
   ClientMessageSchema,
   ServerMessageSchema,
   StateSnapshotSchema,
@@ -147,5 +148,72 @@ describe('ServerMessageSchema', () => {
   it('rejects update with invalid payload', () => {
     const msg = { type: 'update', payload: { droneId: 'bad', ts: 'not-a-number' } };
     expect(ServerMessageSchema.safeParse(msg).success).toBe(false);
+  });
+});
+
+describe('BroadcastSnapshotSchema', () => {
+  const base = {
+    droneId: 'drone-1',
+    ts: 1_000_000,
+    lat: 50.45,
+    lng: 30.52,
+    altitude_m: 120,
+    heading_deg: 90,
+    speed_mps: 10,
+    battery_pct: 80,
+    status: 'active' as const,
+  };
+
+  it('parses a valid BroadcastSnapshot with all optional fields', () => {
+    const result = BroadcastSnapshotSchema.safeParse({
+      ...base,
+      msg_id: 'test-msg-id',
+      server_recv_ts: 1700000000000,
+      server_send_ts: 1700000000005,
+      benchmark_id: 'bench-1',
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.server_send_ts).toBe(1700000000005);
+      expect(result.data.msg_id).toBe('test-msg-id');
+      expect(result.data.benchmark_id).toBe('bench-1');
+    }
+  });
+
+  it('parses without optional correlation fields', () => {
+    const result = BroadcastSnapshotSchema.safeParse(base);
+    expect(result.success).toBe(true);
+  });
+});
+
+describe('TelemetryMessageSchema with benchmark_id', () => {
+  it('accepts optional benchmark_id', () => {
+    const result = TelemetryMessageSchema.safeParse({
+      droneId: 'drone-1',
+      ts: 1_000_000,
+      lat: 0,
+      lng: 0,
+      altitude_m: 0,
+      heading_deg: 0,
+      speed_mps: 0,
+      battery_pct: 50,
+      benchmark_id: 'bench-abc',
+    });
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.benchmark_id).toBe('bench-abc');
+  });
+
+  it('parses without benchmark_id', () => {
+    const result = TelemetryMessageSchema.safeParse({
+      droneId: 'drone-1',
+      ts: 1_000_000,
+      lat: 0,
+      lng: 0,
+      altitude_m: 0,
+      heading_deg: 0,
+      speed_mps: 0,
+      battery_pct: 50,
+    });
+    expect(result.success).toBe(true);
   });
 });

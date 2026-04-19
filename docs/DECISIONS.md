@@ -108,3 +108,16 @@
 - Animated replay (play button, marker moves along path over time) — more impressive for portfolio demo but adds meaningful complexity: animation loop, playback speed controls, time scrubber, synchronising marker position to timestamps. Deferred to a possible v6 enhancement alongside mission planning and replay video.
 
 **Trade-offs**: Static path delivers the full vertical slice (API → map) with low risk. Animated replay is a natural follow-up in v6 where "replay video" is already on the roadmap.
+
+## 2026-04-19 — Hardcoded METRICS_TOKEN in prometheus.yml
+
+**Context**: Prometheus scrapes `/metrics` with a bearer token that must match `METRICS_TOKEN` in `.env`. The token must live somewhere Prometheus can read it — either a file or inline in `prometheus.yml`.
+
+**Decision**: Store the default dev token inline in `apps/api/prometheus/prometheus.yml` (committed to source control). The placeholder value `change-me-metrics-token-min16chars` is documented as requiring replacement before real use.
+
+**Alternatives considered**:
+
+- `credentials_file` pointing to a secrets file — cleaner but requires an additional file outside docker-compose volume mounts; adds friction for local dev setup.
+- Env-var interpolation in prometheus.yml — not supported by Prometheus; requires a pre-processing step.
+
+**Trade-offs**: Token rotation requires updating both `.env` and `prometheus.yml` together — if one is changed without the other, the `api` scrape target silently goes `DOWN`. Acceptable for a solo dev project. If shared dev or CI is added, move to `credentials_file` with the file generated from `.env` at startup.

@@ -8,3 +8,4 @@ process.env['JWT_SECRET'] = 'test-secret-that-is-at-least-32-chars-long';
 process.env['JWT_EXPIRES_IN'] = '15m';
 process.env['PORT'] = '3001';
 process.env['NODE_ENV'] = 'test';
+process.env['METRICS_TOKEN'] = 'test-metrics-token-16ch';

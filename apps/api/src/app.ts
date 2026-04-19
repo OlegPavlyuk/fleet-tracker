@@ -14,12 +14,16 @@ import { makeDbDroneDeps } from './drones/index.js';
 import { createTelemetryRouter } from './telemetry/index.js';
 import { makeDbTelemetryDeps } from './telemetry/index.js';
 import { createTestRouter } from './test-router.js';
+import { createMetricsHandler } from './metrics/index.js';
 
 export function createApp(db: AppDb = globalDb): Express {
   const app = express();
 
   app.use(helmet());
   app.use(cors({ origin: config.nodeEnv === 'production' ? false : true, credentials: true }));
+
+  // /metrics is mounted before pino-http to exclude it from request logging
+  app.get('/metrics', createMetricsHandler(config.metricsToken));
 
   if (config.nodeEnv !== 'test') {
     app.use(pinoHttp({ logger }));

@@ -49,9 +49,13 @@ const persistQueue = new PersistQueue(makePersistDeps());
 
 attachIngestWs(server, {
   ...makeDbIngestDeps(),
-  onTelemetry: (droneId, msg) => {
-    stateManager.update(droneId, msg);
-    persistQueue.push({ ...msg, droneId }); // use auth-verified droneId, not client-sent
+  onTelemetry: (droneId, msg, meta) => {
+    stateManager.update(droneId, msg, {
+      msgId: meta.msgId,
+      serverRecvTs: meta.serverRecvTs,
+      ...(meta.benchmarkId !== undefined && { benchmarkId: meta.benchmarkId }),
+    });
+    persistQueue.push({ ...msg, droneId }, meta.msgId); // use auth-verified droneId, not client-sent
   },
 });
 

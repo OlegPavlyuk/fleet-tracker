@@ -1,10 +1,19 @@
 import { EventEmitter } from 'node:events';
 import type { TelemetryMessage, StateSnapshot } from '@fleet-tracker/shared';
+import { stateUpdateDurationMs } from '../metrics/index.js';
+
+interface TelemetryMeta {
+  msgId?: string;
+  serverRecvTs?: number;
+  benchmarkId?: string;
+}
 
 export class StateManager extends EventEmitter {
   private readonly states = new Map<string, StateSnapshot>();
 
-  update(droneId: string, msg: TelemetryMessage): StateSnapshot {
+  update(droneId: string, msg: TelemetryMessage, meta?: TelemetryMeta): StateSnapshot {
+    const t0 = performance.now();
+
     const snapshot: StateSnapshot = {
       droneId,
       ts: msg.ts,
@@ -15,10 +24,15 @@ export class StateManager extends EventEmitter {
       speed_mps: msg.speed_mps,
       battery_pct: msg.battery_pct,
       status: msg.battery_pct > 20 ? 'active' : 'idle',
+      msg_id: meta?.msgId,
+      server_recv_ts: meta?.serverRecvTs,
+      benchmark_id: meta?.benchmarkId,
     };
 
     this.states.set(droneId, snapshot);
     this.emit('state-changed', snapshot);
+
+    stateUpdateDurationMs.observe(performance.now() - t0);
     return snapshot;
   }
 

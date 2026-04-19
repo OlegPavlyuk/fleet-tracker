@@ -117,6 +117,8 @@ jobs:
       API_BASE_URL: http://localhost:3000
       # Consumed by apps/web/playwright.config.ts (baseURL)
       WEB_BASE_URL: http://localhost:5173
+      # Required by apps/api/src/config.ts (min 16 chars)
+      METRICS_TOKEN: ci-metrics-token-placeholder
 
     steps:
       - uses: actions/checkout@v4
