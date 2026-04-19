@@ -1,0 +1,23 @@
+{
+  "name": "@fleet-tracker/benchmark",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bench": "tsx --env-file ../../.env src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@fleet-tracker/shared": "workspace:*",
+    "commander": "^13.1.0",
+    "uuid": "^11.1.0",
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.21.0"
+  }
+}

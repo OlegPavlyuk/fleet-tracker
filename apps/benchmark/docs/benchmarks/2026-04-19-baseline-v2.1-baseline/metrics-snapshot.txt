@@ -1,0 +1,342 @@
+# HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.
+# TYPE process_cpu_user_seconds_total counter
+process_cpu_user_seconds_total 3.6246579999999993
+
+# HELP process_cpu_system_seconds_total Total system CPU time spent in seconds.
+# TYPE process_cpu_system_seconds_total counter
+process_cpu_system_seconds_total 1.294143
+
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 4.918801
+
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1776604439
+
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 100073472
+
+# HELP nodejs_eventloop_lag_seconds Lag of event loop in seconds.
+# TYPE nodejs_eventloop_lag_seconds gauge
+nodejs_eventloop_lag_seconds 0.003118209
+
+# HELP nodejs_eventloop_lag_min_seconds The minimum recorded event loop delay.
+# TYPE nodejs_eventloop_lag_min_seconds gauge
+nodejs_eventloop_lag_min_seconds 0.009396224
+
+# HELP nodejs_eventloop_lag_max_seconds The maximum recorded event loop delay.
+# TYPE nodejs_eventloop_lag_max_seconds gauge
+nodejs_eventloop_lag_max_seconds 0.013311999
+
+# HELP nodejs_eventloop_lag_mean_seconds The mean of the recorded event loop delays.
+# TYPE nodejs_eventloop_lag_mean_seconds gauge
+nodejs_eventloop_lag_mean_seconds 0.010861594406876791
+
+# HELP nodejs_eventloop_lag_stddev_seconds The standard deviation of the recorded event loop delays.
+# TYPE nodejs_eventloop_lag_stddev_seconds gauge
+nodejs_eventloop_lag_stddev_seconds 0.0004066113573945112
+
+# HELP nodejs_eventloop_lag_p50_seconds The 50th percentile of the recorded event loop delays.
+# TYPE nodejs_eventloop_lag_p50_seconds gauge
+nodejs_eventloop_lag_p50_seconds 0.011051007
+
+# HELP nodejs_eventloop_lag_p90_seconds The 90th percentile of the recorded event loop delays.
+# TYPE nodejs_eventloop_lag_p90_seconds gauge
+nodejs_eventloop_lag_p90_seconds 0.011108351
+
+# HELP nodejs_eventloop_lag_p99_seconds The 99th percentile of the recorded event loop delays.
+# TYPE nodejs_eventloop_lag_p99_seconds gauge
+nodejs_eventloop_lag_p99_seconds 0.011747327
+
+# HELP nodejs_active_resources Number of active resources that are currently keeping the event loop alive, grouped by async resource type.
+# TYPE nodejs_active_resources gauge
+nodejs_active_resources{type="TTYWrap"} 2
+nodejs_active_resources{type="TCPServerWrap"} 1
+nodejs_active_resources{type="TCPSocketWrap"} 12
+nodejs_active_resources{type="Timeout"} 21
+nodejs_active_resources{type="Immediate"} 1
+
+# HELP nodejs_active_resources_total Total number of active resources.
+# TYPE nodejs_active_resources_total gauge
+nodejs_active_resources_total 37
+
+# HELP nodejs_active_handles Number of active libuv handles grouped by handle type. Every handle type is C++ class name.
+# TYPE nodejs_active_handles gauge
+nodejs_active_handles{type="WriteStream"} 2
+nodejs_active_handles{type="Server"} 1
+nodejs_active_handles{type="Socket"} 12
+
+# HELP nodejs_active_handles_total Total number of active handles.
+# TYPE nodejs_active_handles_total gauge
+nodejs_active_handles_total 15
+
+# HELP nodejs_active_requests Number of active libuv requests grouped by request type. Every request type is C++ class name.
+# TYPE nodejs_active_requests gauge
+
+# HELP nodejs_active_requests_total Total number of active requests.
+# TYPE nodejs_active_requests_total gauge
+nodejs_active_requests_total 0
+
+# HELP nodejs_heap_size_total_bytes Process heap size from Node.js in bytes.
+# TYPE nodejs_heap_size_total_bytes gauge
+nodejs_heap_size_total_bytes 28049408
+
+# HELP nodejs_heap_size_used_bytes Process heap size used from Node.js in bytes.
+# TYPE nodejs_heap_size_used_bytes gauge
+nodejs_heap_size_used_bytes 26246776
+
+# HELP nodejs_external_memory_bytes Node.js external memory size in bytes.
+# TYPE nodejs_external_memory_bytes gauge
+nodejs_external_memory_bytes 2966107
+
+# HELP nodejs_heap_space_size_total_bytes Process heap space size total from Node.js in bytes.
+# TYPE nodejs_heap_space_size_total_bytes gauge
+nodejs_heap_space_size_total_bytes{space="read_only"} 0
+nodejs_heap_space_size_total_bytes{space="new"} 1048576
+nodejs_heap_space_size_total_bytes{space="old"} 23625728
+nodejs_heap_space_size_total_bytes{space="code"} 2883584
+nodejs_heap_space_size_total_bytes{space="shared"} 0
+nodejs_heap_space_size_total_bytes{space="new_large_object"} 0
+nodejs_heap_space_size_total_bytes{space="large_object"} 278528
+nodejs_heap_space_size_total_bytes{space="code_large_object"} 212992
+nodejs_heap_space_size_total_bytes{space="shared_large_object"} 0
+
+# HELP nodejs_heap_space_size_used_bytes Process heap space size used from Node.js in bytes.
+# TYPE nodejs_heap_space_size_used_bytes gauge
+nodejs_heap_space_size_used_bytes{space="read_only"} 0
+nodejs_heap_space_size_used_bytes{space="new"} 908352
+nodejs_heap_space_size_used_bytes{space="old"} 22607376
+nodejs_heap_space_size_used_bytes{space="code"} 2317296
+nodejs_heap_space_size_used_bytes{space="shared"} 0
+nodejs_heap_space_size_used_bytes{space="new_large_object"} 0
+nodejs_heap_space_size_used_bytes{space="large_object"} 262160
+nodejs_heap_space_size_used_bytes{space="code_large_object"} 155296
+nodejs_heap_space_size_used_bytes{space="shared_large_object"} 0
+
+# HELP nodejs_heap_space_size_available_bytes Process heap space size available from Node.js in bytes.
+# TYPE nodejs_heap_space_size_available_bytes gauge
+nodejs_heap_space_size_available_bytes{space="read_only"} 0
+nodejs_heap_space_size_available_bytes{space="new"} 122528
+nodejs_heap_space_size_available_bytes{space="old"} 555312
+nodejs_heap_space_size_available_bytes{space="code"} 25424
+nodejs_heap_space_size_available_bytes{space="shared"} 0
+nodejs_heap_space_size_available_bytes{space="new_large_object"} 1048576
+nodejs_heap_space_size_available_bytes{space="large_object"} 0
+nodejs_heap_space_size_available_bytes{space="code_large_object"} 0
+nodejs_heap_space_size_available_bytes{space="shared_large_object"} 0
+
+# HELP nodejs_version_info Node.js version info.
+# TYPE nodejs_version_info gauge
+nodejs_version_info{version="v20.19.1",major="20",minor="19",patch="1"} 1
+
+# HELP nodejs_gc_duration_seconds Garbage collection duration by kind, one of major, minor, incremental or weakcb.
+# TYPE nodejs_gc_duration_seconds histogram
+nodejs_gc_duration_seconds_bucket{le="0.001",kind="incremental"} 1
+nodejs_gc_duration_seconds_bucket{le="0.01",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="0.1",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="1",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="2",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="5",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="+Inf",kind="incremental"} 2
+nodejs_gc_duration_seconds_sum{kind="incremental"} 0.0018498330116271972
+nodejs_gc_duration_seconds_count{kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="0.001",kind="major"} 0
+nodejs_gc_duration_seconds_bucket{le="0.01",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="0.1",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="1",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="2",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="5",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="+Inf",kind="major"} 2
+nodejs_gc_duration_seconds_sum{kind="major"} 0.008384084224700928
+nodejs_gc_duration_seconds_count{kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="0.001",kind="minor"} 80
+nodejs_gc_duration_seconds_bucket{le="0.01",kind="minor"} 104
+nodejs_gc_duration_seconds_bucket{le="0.1",kind="minor"} 104
+nodejs_gc_duration_seconds_bucket{le="1",kind="minor"} 104
+nodejs_gc_duration_seconds_bucket{le="2",kind="minor"} 104
+nodejs_gc_duration_seconds_bucket{le="5",kind="minor"} 104
+nodejs_gc_duration_seconds_bucket{le="+Inf",kind="minor"} 104
+nodejs_gc_duration_seconds_sum{kind="minor"} 0.07864341616630555
+nodejs_gc_duration_seconds_count{kind="minor"} 104
+
+# HELP ws_ingest_connections Current number of open ingest WebSocket connections
+# TYPE ws_ingest_connections gauge
+ws_ingest_connections 0
+
+# HELP ws_connections_total Total WebSocket connection lifecycle events
+# TYPE ws_connections_total counter
+ws_connections_total{endpoint="stream",event="connect"} 1
+ws_connections_total{endpoint="ingest",event="connect"} 10
+ws_connections_total{endpoint="ingest",event="disconnect"} 10
+ws_connections_total{endpoint="stream",event="disconnect"} 1
+
+# HELP validate_duration_ms Time to JSON-parse and zod-validate a single telemetry frame (ms)
+# TYPE validate_duration_ms histogram
+validate_duration_ms_bucket{le="0.1"} 546
+validate_duration_ms_bucket{le="0.5"} 600
+validate_duration_ms_bucket{le="1"} 600
+validate_duration_ms_bucket{le="5"} 600
+validate_duration_ms_bucket{le="10"} 600
+validate_duration_ms_bucket{le="25"} 600
+validate_duration_ms_bucket{le="50"} 600
+validate_duration_ms_bucket{le="100"} 600
+validate_duration_ms_bucket{le="250"} 600
+validate_duration_ms_bucket{le="500"} 600
+validate_duration_ms_bucket{le="1000"} 600
+validate_duration_ms_bucket{le="+Inf"} 600
+validate_duration_ms_sum 22.5894580000313
+validate_duration_ms_count 600
+
+# HELP ingest_messages_total Total ingest frames processed
+# TYPE ingest_messages_total counter
+ingest_messages_total{result="ok"} 600
+
+# HELP state_update_duration_ms Time to run StateManager.update() (ms)
+# TYPE state_update_duration_ms histogram
+state_update_duration_ms_bucket{le="0.1"} 439
+state_update_duration_ms_bucket{le="0.5"} 595
+state_update_duration_ms_bucket{le="1"} 600
+state_update_duration_ms_bucket{le="5"} 600
+state_update_duration_ms_bucket{le="10"} 600
+state_update_duration_ms_bucket{le="25"} 600
+state_update_duration_ms_bucket{le="50"} 600
+state_update_duration_ms_bucket{le="100"} 600
+state_update_duration_ms_bucket{le="250"} 600
+state_update_duration_ms_bucket{le="500"} 600
+state_update_duration_ms_bucket{le="1000"} 600
+state_update_duration_ms_bucket{le="+Inf"} 600
+state_update_duration_ms_sum 62.26087099988945
+state_update_duration_ms_count 600
+
+# HELP persist_enqueue_duration_ms Time to execute PersistQueue.push() (ms)
+# TYPE persist_enqueue_duration_ms histogram
+persist_enqueue_duration_ms_bucket{le="0.1"} 599
+persist_enqueue_duration_ms_bucket{le="0.5"} 600
+persist_enqueue_duration_ms_bucket{le="1"} 600
+persist_enqueue_duration_ms_bucket{le="5"} 600
+persist_enqueue_duration_ms_bucket{le="10"} 600
+persist_enqueue_duration_ms_bucket{le="25"} 600
+persist_enqueue_duration_ms_bucket{le="50"} 600
+persist_enqueue_duration_ms_bucket{le="100"} 600
+persist_enqueue_duration_ms_bucket{le="250"} 600
+persist_enqueue_duration_ms_bucket{le="500"} 600
+persist_enqueue_duration_ms_bucket{le="1000"} 600
+persist_enqueue_duration_ms_bucket{le="+Inf"} 600
+persist_enqueue_duration_ms_sum 1.890296999597922
+persist_enqueue_duration_ms_count 600
+
+# HELP persist_queue_size Current number of entries waiting in the persist queue
+# TYPE persist_queue_size gauge
+persist_queue_size 0
+
+# HELP persist_flush_duration_ms Time to complete a persist flush (batchInsert) (ms)
+# TYPE persist_flush_duration_ms histogram
+persist_flush_duration_ms_bucket{le="0.1"} 0
+persist_flush_duration_ms_bucket{le="0.5"} 0
+persist_flush_duration_ms_bucket{le="1"} 0
+persist_flush_duration_ms_bucket{le="5"} 0
+persist_flush_duration_ms_bucket{le="10"} 3
+persist_flush_duration_ms_bucket{le="25"} 49
+persist_flush_duration_ms_bucket{le="50"} 53
+persist_flush_duration_ms_bucket{le="100"} 60
+persist_flush_duration_ms_bucket{le="250"} 60
+persist_flush_duration_ms_bucket{le="500"} 60
+persist_flush_duration_ms_bucket{le="1000"} 60
+persist_flush_duration_ms_bucket{le="+Inf"} 60
+persist_flush_duration_ms_sum 1338.1533320007147
+persist_flush_duration_ms_count 60
+
+# HELP persist_batch_size Number of rows in each persist flush batch
+# TYPE persist_batch_size histogram
+persist_batch_size_bucket{le="1"} 0
+persist_batch_size_bucket{le="10"} 60
+persist_batch_size_bucket{le="25"} 60
+persist_batch_size_bucket{le="50"} 60
+persist_batch_size_bucket{le="100"} 60
+persist_batch_size_bucket{le="200"} 60
+persist_batch_size_bucket{le="500"} 60
+persist_batch_size_bucket{le="+Inf"} 60
+persist_batch_size_sum 600
+persist_batch_size_count 60
+
+# HELP persist_flush_total Total persist flush operations
+# TYPE persist_flush_total counter
+persist_flush_total{result="ok"} 60
+
+# HELP queue_wait_ms Per-entry time between enqueue and flush start (ms)
+# TYPE queue_wait_ms histogram
+queue_wait_ms_bucket{le="0.1"} 0
+queue_wait_ms_bucket{le="0.5"} 0
+queue_wait_ms_bucket{le="1"} 0
+queue_wait_ms_bucket{le="5"} 0
+queue_wait_ms_bucket{le="10"} 0
+queue_wait_ms_bucket{le="25"} 0
+queue_wait_ms_bucket{le="50"} 0
+queue_wait_ms_bucket{le="100"} 0
+queue_wait_ms_bucket{le="250"} 0
+queue_wait_ms_bucket{le="500"} 600
+queue_wait_ms_bucket{le="1000"} 600
+queue_wait_ms_bucket{le="+Inf"} 600
+queue_wait_ms_sum 216398.54608099803
+queue_wait_ms_count 600
+
+# HELP persist_dropped_total Total telemetry writes dropped (ring-buffer eviction + flush errors)
+# TYPE persist_dropped_total counter
+persist_dropped_total 0
+
+# HELP ws_stream_connections Current number of open stream WebSocket connections
+# TYPE ws_stream_connections gauge
+ws_stream_connections 0
+
+# HELP broadcast_send_duration_ms Time to serialise and send one update to all connected stream clients (ms)
+# TYPE broadcast_send_duration_ms histogram
+broadcast_send_duration_ms_bucket{le="0.1"} 487
+broadcast_send_duration_ms_bucket{le="0.5"} 599
+broadcast_send_duration_ms_bucket{le="1"} 600
+broadcast_send_duration_ms_bucket{le="5"} 600
+broadcast_send_duration_ms_bucket{le="10"} 600
+broadcast_send_duration_ms_bucket{le="25"} 600
+broadcast_send_duration_ms_bucket{le="50"} 600
+broadcast_send_duration_ms_bucket{le="100"} 600
+broadcast_send_duration_ms_bucket{le="250"} 600
+broadcast_send_duration_ms_bucket{le="500"} 600
+broadcast_send_duration_ms_bucket{le="1000"} 600
+broadcast_send_duration_ms_bucket{le="+Inf"} 600
+broadcast_send_duration_ms_sum 48.94429699971806
+broadcast_send_duration_ms_count 600
+
+# HELP broadcast_fanout_size Number of stream clients receiving each broadcast update
+# TYPE broadcast_fanout_size histogram
+broadcast_fanout_size_bucket{le="1"} 600
+broadcast_fanout_size_bucket{le="10"} 600
+broadcast_fanout_size_bucket{le="50"} 600
+broadcast_fanout_size_bucket{le="100"} 600
+broadcast_fanout_size_bucket{le="500"} 600
+broadcast_fanout_size_bucket{le="1000"} 600
+broadcast_fanout_size_bucket{le="5000"} 600
+broadcast_fanout_size_bucket{le="+Inf"} 600
+broadcast_fanout_size_sum 600
+broadcast_fanout_size_count 600
+
+# HELP broadcast_send_failures_total Total broadcast sends that threw an error
+# TYPE broadcast_send_failures_total counter
+broadcast_send_failures_total 0
+
+# HELP server_ingress_to_broadcast_ms Server-owned e2e latency: server_recv_ts to server_send_ts (ms)
+# TYPE server_ingress_to_broadcast_ms histogram
+server_ingress_to_broadcast_ms_bucket{le="0.1"} 538
+server_ingress_to_broadcast_ms_bucket{le="0.5"} 538
+server_ingress_to_broadcast_ms_bucket{le="1"} 599
+server_ingress_to_broadcast_ms_bucket{le="5"} 600
+server_ingress_to_broadcast_ms_bucket{le="10"} 600
+server_ingress_to_broadcast_ms_bucket{le="25"} 600
+server_ingress_to_broadcast_ms_bucket{le="50"} 600
+server_ingress_to_broadcast_ms_bucket{le="100"} 600
+server_ingress_to_broadcast_ms_bucket{le="250"} 600
+server_ingress_to_broadcast_ms_bucket{le="500"} 600
+server_ingress_to_broadcast_ms_bucket{le="1000"} 600
+server_ingress_to_broadcast_ms_bucket{le="+Inf"} 600
+server_ingress_to_broadcast_ms_sum 63
+server_ingress_to_broadcast_ms_count 600

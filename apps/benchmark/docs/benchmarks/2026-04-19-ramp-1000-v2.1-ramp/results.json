@@ -1,0 +1,59 @@
+{
+  "scenario": "ramp",
+  "tag": "v2.1-ramp",
+  "git_sha": "36e5b45",
+  "duration_s": 60,
+  "drones": 1000,
+  "hz": 1,
+  "samples": 60000,
+  "latency_ms": {
+    "e2e": {
+      "p50": 1,
+      "p95": 9,
+      "p99": 109,
+      "max": 187
+    },
+    "server_recv_to_send": {
+      "p50": 0,
+      "p95": 0,
+      "p99": 1,
+      "max": 2
+    },
+    "queue_wait": {
+      "p50": 20.44,
+      "p95": 192.65,
+      "p99": 448.77,
+      "max": 1000
+    },
+    "persist_flush": {
+      "p50": 17.25,
+      "p95": 26.55,
+      "p99": 60.71,
+      "max": 1000
+    },
+    "send_to_client_recv": {
+      "p50": 0,
+      "p95": 1,
+      "p99": 2,
+      "max": 16
+    }
+  },
+  "backpressure": {
+    "dropped_total": 0,
+    "drop_rate_per_s": 0,
+    "queue_growth_rate_per_s": 0,
+    "ingest_persist_lag_msgs": 96057,
+    "max_queue_depth": 0
+  },
+  "counters": {
+    "ingest_ok": 97200,
+    "persist_rows": 1143,
+    "broadcast_sent": 10,
+    "errors": 0
+  },
+  "system": {
+    "event_loop_lag_p99_s": 0.014983167,
+    "heap_max_mb": 29.4,
+    "gc_pause_p99_ms": 0
+  }
+}

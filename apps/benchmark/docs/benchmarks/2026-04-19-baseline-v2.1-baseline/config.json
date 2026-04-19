@@ -1,0 +1,11 @@
+{
+  "scenario": "baseline",
+  "tag": "v2.1-baseline",
+  "git_sha": "36e5b45",
+  "drones": 10,
+  "hz": 1,
+  "duration_s": 60,
+  "node_version": "v20.19.1",
+  "platform": "darwin",
+  "arch": "arm64"
+}

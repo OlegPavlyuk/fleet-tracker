@@ -1,0 +1,59 @@
+{
+  "scenario": "baseline",
+  "tag": "v2.1-baseline",
+  "git_sha": "36e5b45",
+  "duration_s": 60,
+  "drones": 10,
+  "hz": 1,
+  "samples": 600,
+  "latency_ms": {
+    "e2e": {
+      "p50": 1,
+      "p95": 4,
+      "p99": 7,
+      "max": 9
+    },
+    "server_recv_to_send": {
+      "p50": 0,
+      "p95": 1,
+      "p99": 1,
+      "max": 2
+    },
+    "queue_wait": {
+      "p50": 375,
+      "p95": 487.5,
+      "p99": 497.5,
+      "max": 1000
+    },
+    "persist_flush": {
+      "p50": 18.8,
+      "p95": 78.57,
+      "p99": 95.71,
+      "max": 1000
+    },
+    "send_to_client_recv": {
+      "p50": 0,
+      "p95": 1,
+      "p99": 2,
+      "max": 3
+    }
+  },
+  "backpressure": {
+    "dropped_total": 0,
+    "drop_rate_per_s": 0,
+    "queue_growth_rate_per_s": 0,
+    "ingest_persist_lag_msgs": 540,
+    "max_queue_depth": 0
+  },
+  "counters": {
+    "ingest_ok": 600,
+    "persist_rows": 60,
+    "broadcast_sent": 2,
+    "errors": 0
+  },
+  "system": {
+    "event_loop_lag_p99_s": 0.011747327,
+    "heap_max_mb": 25,
+    "gc_pause_p99_ms": 0
+  }
+}
