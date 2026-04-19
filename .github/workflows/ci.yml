@@ -138,12 +138,12 @@ jobs:
 
       # ── Start PostGIS ──────────────────────────
       - name: Start PostGIS
-        run: docker compose up -d
+        run: docker compose -f infra/docker/docker-compose.yml up -d
         # docker-compose.yml has a healthcheck; we wait for it below
 
       - name: Wait for PostGIS to be ready
         run: |
-          until docker compose exec -T db pg_isready -U postgres -d fleet_tracker; do
+          until docker compose -f infra/docker/docker-compose.yml exec -T db pg_isready -U postgres -d fleet_tracker; do
             echo "Waiting for PostGIS..."
             sleep 2
           done
@@ -194,6 +194,6 @@ jobs:
       # ── Cleanup (always runs) ─────────────────
       - name: Teardown
         if: always()
-        run: docker compose down -v
+        run: docker compose -f infra/docker/docker-compose.yml down -v
         # -v removes named volumes (pgdata) — safe because CI runners are stateless.
         # Each run starts with a clean slate regardless.
