@@ -106,4 +106,30 @@ describe('StateManager', () => {
     manager.update('drone-1', baseTelemetry); // overwrite, no size change
     expect(manager.size).toBe(2);
   });
+
+  it('stores msg_id in snapshot when meta is provided', () => {
+    manager.update('drone-1', baseTelemetry, {
+      msgId: 'test-msg-id-123',
+      serverRecvTs: 1700000000000,
+    });
+    const snap = manager.get('drone-1');
+    expect(snap?.msg_id).toBe('test-msg-id-123');
+    expect(snap?.server_recv_ts).toBe(1700000000000);
+  });
+
+  it('stores benchmark_id in snapshot when provided in meta', () => {
+    manager.update('drone-1', baseTelemetry, {
+      msgId: 'test-msg-id-456',
+      serverRecvTs: 1700000000000,
+      benchmarkId: 'bench-run-1',
+    });
+    const snap = manager.get('drone-1');
+    expect(snap?.benchmark_id).toBe('bench-run-1');
+  });
+
+  it('snapshot has no msg_id when meta is omitted', () => {
+    manager.update('drone-1', baseTelemetry);
+    const snap = manager.get('drone-1');
+    expect(snap?.msg_id).toBeUndefined();
+  });
 });
