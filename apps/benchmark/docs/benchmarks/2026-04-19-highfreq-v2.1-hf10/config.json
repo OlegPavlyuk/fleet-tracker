@@ -1,0 +1,11 @@
+{
+  "scenario": "highfreq",
+  "tag": "v2.1-hf10",
+  "git_sha": "3781f29",
+  "drones": 1000,
+  "hz": 10,
+  "duration_s": 120,
+  "node_version": "v20.19.1",
+  "platform": "darwin",
+  "arch": "arm64"
+}
