@@ -113,7 +113,7 @@
 
 **Context**: Prometheus scrapes `/metrics` with a bearer token that must match `METRICS_TOKEN` in `.env`. The token must live somewhere Prometheus can read it — either a file or inline in `prometheus.yml`.
 
-**Decision**: Store the default dev token inline in `apps/api/prometheus/prometheus.yml` (committed to source control). The placeholder value `change-me-metrics-token-min16chars` is documented as requiring replacement before real use.
+**Decision**: Store the default dev token inline in `infra/observability/prometheus/prometheus.yml` (committed to source control). The placeholder value `change-me-metrics-token-min16chars` is documented as requiring replacement before real use.
 
 **Alternatives considered**:
 

@@ -19,6 +19,9 @@
     "test:integration": "pnpm --filter api test:integration",
     "test:e2e": "pnpm --filter web test:e2e",
     "typecheck": "pnpm -r typecheck",
+    "infra:up": "docker-compose --env-file .env -f infra/docker/docker-compose.yml up -d",
+    "infra:down": "docker-compose --env-file .env -f infra/docker/docker-compose.yml down",
+    "infra:logs": "docker-compose --env-file .env -f infra/docker/docker-compose.yml logs -f",
     "prepare": "husky"
   },
   "devDependencies": {

@@ -23,7 +23,7 @@ services:
     ports:
       - '9090:9090'
     volumes:
-      - ./apps/api/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -44,8 +44,8 @@ services:
       GF_AUTH_ANONYMOUS_ENABLED: 'true'
       GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
     volumes:
-      - ./apps/api/grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./apps/api/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ../observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
       - grafana_data:/var/lib/grafana
     depends_on:
       - prometheus
