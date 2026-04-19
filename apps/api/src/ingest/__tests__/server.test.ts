@@ -128,8 +128,8 @@ describe('attachIngestWs', () => {
         'drone-1',
         VALID_TELEMETRY,
         expect.objectContaining({
-          msgId: expect.any(String),
-          serverRecvTs: expect.any(Number),
+          msgId: expect.any(String) as unknown,
+          serverRecvTs: expect.any(Number) as unknown,
         }),
       );
     });
